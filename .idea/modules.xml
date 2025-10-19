@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/CSP.iml" filepath="$PROJECT_DIR$/.idea/CSP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/github.project.CSP.main.iml" filepath="$PROJECT_DIR$/.idea/modules/github.project.CSP.main.iml" />
     </modules>
   </component>
 </project>

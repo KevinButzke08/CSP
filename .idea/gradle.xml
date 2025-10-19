@@ -7,7 +7,7 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$/Backend" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/Backend" />
+            <option value="$PROJECT_DIR$/backend" />
           </set>
         </option>
       </GradleProjectSettings>
