@@ -42,6 +42,7 @@ Horizon case API example: https://steamcommunity.com/market/itemordershistogram?
 -  API Key nach Antrag erhältlich
 ## Technical Build Plan:
 - Backend: Spring Boot Java
+- - Dependencies: SQLite, Spring Web, HTTP Client, Reactive HTTP Client, Spring Data JPA
 - Save user inputs of items: Postgres oder Embedded DB (H2)
 - Frontend: Vue :3
 - Produce a fat jar and use jpackage to bundle it to a installer
