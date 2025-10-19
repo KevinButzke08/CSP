@@ -7,8 +7,8 @@ Project to build a CS Portfolio manager, which shows you directly what the items
 -  Add items
 -  Sell items and track the payout
 
-## API FORSCHUNG:
-
+## API research:
+### Steam market API:
 Horizon case API example: https://steamcommunity.com/market/itemordershistogram?country=DE&language=german&currency=1&item_nameid=175999886
 `{
   "success": 1,
@@ -35,4 +35,14 @@ Horizon case API example: https://steamcommunity.com/market/itemordershistogram?
 
 - Nice, because currency can be easily changed
 - Rate limits are still to be tested
-
+### Skinport API:
+-  https://docs.skinport.com/items
+-  API Key simpel durch eigenen Account, aber braucht man nicht? (Wahrscheinlich nur, wenn man Profil Requests wie Transaktionen aufgeben möchte?)
+### SkinBaron API:
+-  API Key nach Antrag erhältlich
+## Technical Build Plan:
+- Backend: Spring Boot Java
+- Save user inputs of items: Postgres oder Embedded DB (H2)
+- Frontend: Vue :3
+- Produce a fat jar and use jpackage to bundle it to a installer
+- - Static files von Vue generieren (npm run build) in Spring Static resources kopieren und JDK bauen
