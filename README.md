@@ -47,3 +47,8 @@ Horizon case API example: https://steamcommunity.com/market/itemordershistogram?
 - Frontend: Vue :3
 - Produce a fat jar and use jpackage to bundle it to a installer
 - - Static files von Vue generieren (npm run build) in Spring Static resources kopieren und JDK bauen
+ 
+## Class-diagramm:
+<img width="610" height="300" alt="CSP Class diagram" src="https://github.com/user-attachments/assets/94065afc-10a0-4637-9a7e-328f497c0071" />
+
+
