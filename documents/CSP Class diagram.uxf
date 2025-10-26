@@ -100,4 +100,33 @@ m1=*
 m2=1</panel_attributes>
     <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
   </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>870</x>
+      <y>330</y>
+      <w>230</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>PortfolioSnapshot
+--
+-id:Long
+-timestamp:LocalDateTime
+-CurrentValue:float
+-ChangePercantage:float</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>880</x>
+      <y>230</y>
+      <w>30</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=
+m2=*</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
 </diagram>
