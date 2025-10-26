@@ -12,11 +12,11 @@
     <panel_attributes>&lt;&lt;enumeration&gt;&gt;
 Condition
 --
-Factory New
-Minimal Wear
-Field-Tested
-Well-Worn
-Battle-Scarred</panel_attributes>
+FACTORY_NEW
+MINIMAL_WEAR
+FIELD_TESTED
+WELL_WORN
+BATTLE_SCARRED</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -29,7 +29,7 @@ Battle-Scarred</panel_attributes>
     </coordinates>
     <panel_attributes>ConditionItem
 --
--condition:Condition</panel_attributes>
+-condition: Condition</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -42,10 +42,10 @@ Battle-Scarred</panel_attributes>
     </coordinates>
     <panel_attributes>Portfolio
 --
--List&lt;Item&gt; Items
--CurrentValue:float
--TotalPurchasePrice:float
--ChangePercantage:float</panel_attributes>
+-itemList: List&lt;Item&gt;
+-currentValue: float
+-totalPurchasePrice: float
+-changePercentage: float</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -58,11 +58,11 @@ Battle-Scarred</panel_attributes>
     </coordinates>
     <panel_attributes>Item
 --
--id:Long
--name:String
--quantity:int
--CurrentPrice:float
--PurchasePrice:float</panel_attributes>
+-id: Long
+-name: String
+-quantity: int
+-currentPrice: float
+-purchasePrice: float</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -110,10 +110,10 @@ m2=1</panel_attributes>
     </coordinates>
     <panel_attributes>PortfolioSnapshot
 --
--id:Long
--timestamp:LocalDateTime
--CurrentValue:float
--ChangePercantage:float</panel_attributes>
+-id: Long
+-timestamp: LocalDateTime
+-currentValue: float
+-changePercentage: float</panel_attributes>
     <additional_attributes/>
   </element>
   <element>

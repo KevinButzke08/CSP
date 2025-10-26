@@ -9,8 +9,8 @@ import lombok.Data;
 public class Item {
     @Id
     private Long id;
-
     private String name;
-
-    private float price;
+    private int quantity;
+    private float currentPrice;
+    private float purchasePrice;
 }
