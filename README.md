@@ -45,6 +45,8 @@ Horizon case API example: https://steamcommunity.com/market/itemordershistogram?
 - - Dependencies: SQLite, Spring Web, HTTP Client, Reactive HTTP Client, Spring Data JPA
 - Save user inputs of items: Postgres oder Embedded DB (H2)
 - Frontend: Vue :3
+- UI Component Framework: PrimeVue
+- Cross-Platform-Desktop-App Framework: Electron
 - Produce a fat jar and use jpackage to bundle it to a installer
 - - Static files von Vue generieren (npm run build) in Spring Static resources kopieren und JDK bauen
  
