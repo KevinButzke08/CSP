@@ -1,9 +1,11 @@
 package csp.service;
 
 import csp.inventory.Item;
+import csp.inventory.Portfolio;
 import csp.responses.SteamPriceOverview;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -26,11 +28,21 @@ public class SteamMarketService {
                 .retrieve()
                 .bodyToMono(SteamPriceOverview.class);
     }
-    public float getCurrentPortfolioValue(List<Item> portfolioItems) {
-        //Using flux, iterate over all Portfolio List<Items> and make a shared request and block until all are done, then return
-        //complete currentPortfolio value, but also set for each Item the currentPrice
-        //TODO: Implement Portfolio Service, that calls this method with its Portfolio items
-        return 0;
+
+    public Portfolio getPortfolioPriceUpdate(Portfolio portfolio) {
+        List<Item> itemList = portfolio.getItemList();
+        List<SteamPriceOverview> priceOverviewList = Flux.fromIterable(itemList)
+                .flatMap(item -> getItemPriceOverview(item.getName()))
+                .collectList()
+                .block();
+        //TODO:ERROR HANDLING HERE; IF THE REQUESTS SOMEHOW FAIL
+        for (int i = 0; i < itemList.size(); i++) {
+            itemList.get(i).setCurrentPrice(Float.parseFloat(priceOverviewList.get(i).lowest_price()));
+        }
+        portfolio.setItemList(itemList);
+        portfolio.setCurrentValue((float) portfolio.getItemList().stream().mapToDouble(Item::getCurrentPrice).sum());
+        //TODO:Calculate Change Percentage
+        return portfolio;
     }
 
 }
