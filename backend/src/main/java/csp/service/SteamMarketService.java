@@ -1,7 +1,7 @@
-package github.project.CSP.service;
+package csp.service;
 
-import github.project.CSP.inventory.Item;
-import github.project.CSP.responses.SteamPriceOverview;
+import csp.inventory.Item;
+import csp.responses.SteamPriceOverview;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;

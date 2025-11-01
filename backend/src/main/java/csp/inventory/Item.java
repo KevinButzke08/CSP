@@ -1,4 +1,4 @@
-package github.project.CSP.inventory;
+package csp.inventory;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
