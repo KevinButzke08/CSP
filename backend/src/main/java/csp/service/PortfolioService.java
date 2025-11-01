@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,6 +21,7 @@ public class PortfolioService {
         this.portfolioRepository = portfolioRepository;
         this.steamMarketService = steamMarketService;
     }
+
     @PostConstruct
     private void init() {
         // Load the last saved portfolio or create one if none exists
@@ -28,15 +30,27 @@ public class PortfolioService {
         } else portfolio = portfolioRepository.findAll().getFirst();
         System.out.println("Loaded portfolio with ID: " + portfolio.getId());
     }
+
     public void addItemToPortfolio(Item item) {
-        portfolio.getItemList().add(item);
+        List<Item> mutablePortfolioList = new ArrayList<>(portfolio.getItemList());
+        mutablePortfolioList.add(item);
+        portfolio.setItemList(mutablePortfolioList);
+        portfolio.setTotalPurchasePrice(portfolio.getTotalPurchasePrice() + item.getPurchasePrice() * item.getQuantity());
+
         // Calculate the new changes to currentValue and totalPrice etc.
         updatePortfolio(portfolio.getItemList());
     }
+
     public void updatePortfolio(List<Item> items) {
-        //Update all the values (PricePercentage, CurrentValue of Portfolio and Items! and save to repository)
-        portfolio.setItemList(items);
-        portfolio = steamMarketService.getPortfolioPriceUpdate(portfolio);
+        List<Item> updatedItemList = steamMarketService.updateItemPrices(items);
+        portfolio.setItemList(updatedItemList);
+
+        float currentValue = (float) updatedItemList.stream().mapToDouble(item -> item.getCurrentPrice() * item.getQuantity()).sum();
+        portfolio.setCurrentValue(currentValue);
+
+        float changePercentage = ((portfolio.getCurrentValue() - portfolio.getTotalPurchasePrice()) / portfolio.getTotalPurchasePrice()) * 100f;
+        portfolio.setChangePercentage(changePercentage);
+
         portfolioRepository.save(portfolio);
     }
 }

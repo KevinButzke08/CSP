@@ -49,7 +49,7 @@ https://steamcommunity.com/market/priceoverview/?country=DE&currency=3&appid=730
 ## Technical Build Plan:
 - Backend: Spring Boot Java
 - - Dependencies: SQLite, Spring Web, HTTP Client, Reactive HTTP Client, Spring Data JPA
-- Save user inputs of items: Postgres oder Embedded DB (H2)
+- Save user inputs of items: SQLite
 - Frontend: Vue :3
 - UI Component Framework: PrimeVue
 - Cross-Platform-Desktop-App Framework: Electron

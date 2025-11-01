@@ -1,7 +1,6 @@
 package csp.service;
 
 import csp.inventory.Item;
-import csp.inventory.Portfolio;
 import csp.responses.SteamPriceOverview;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,8 +28,7 @@ public class SteamMarketService {
                 .bodyToMono(SteamPriceOverview.class);
     }
 
-    public Portfolio getPortfolioPriceUpdate(Portfolio portfolio) {
-        List<Item> itemList = portfolio.getItemList();
+    public List<Item> updateItemPrices(List<Item> itemList) {
         List<SteamPriceOverview> priceOverviewList = Flux.fromIterable(itemList)
                 .flatMap(item -> getItemPriceOverview(item.getName()))
                 .collectList()
@@ -39,10 +37,6 @@ public class SteamMarketService {
         for (int i = 0; i < itemList.size(); i++) {
             itemList.get(i).setCurrentPrice(Float.parseFloat(priceOverviewList.get(i).lowest_price()));
         }
-        portfolio.setItemList(itemList);
-        portfolio.setCurrentValue((float) portfolio.getItemList().stream().mapToDouble(Item::getCurrentPrice).sum());
-        //TODO:Calculate Change Percentage
-        return portfolio;
+        return itemList;
     }
-
 }
