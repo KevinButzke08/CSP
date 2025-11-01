@@ -1,5 +1,21 @@
-/* main css */
+/* Regular */
+@font-face {
+  font-family: 'MomoTrustDisplay';
+  src: url('@/assets/fonts/MomoTrustDisplay-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Optional: Bold simulieren (falls keine Bold-Datei) */
+@font-face {
+  font-family: 'MomoTrustDisplay';
+  src: url('@/assets/fonts/MomoTrustDisplay-Regular.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 body {
-  font-family: "Arial", sans-serif;
+  font-family: 'MomoTrustDisplay', sans-serif;
 }
