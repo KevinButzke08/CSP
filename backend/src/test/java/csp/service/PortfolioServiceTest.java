@@ -10,8 +10,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -51,13 +49,14 @@ class PortfolioServiceTest {
         item2.setPurchasePrice(5f);
         item2.setQuantity(1);
 
-        portfolioService.getPortfolio().setTotalPurchasePrice(7.5f);
-        portfolioService.updatePortfolio(List.of(item, item2));
+        portfolioService.addItemToPortfolio(item);
+        portfolioService.addItemToPortfolio(item2);
+        portfolioService.updatePortfolio();
 
         Portfolio portfolio = portfolioService.getPortfolio();
         assertEquals(2, portfolio.getItemList().size());
         assertEquals(100f, portfolio.getChangePercentage());
-        verify(steamMarketService, times(1)).updateItemPrices(anyList());
+        verify(steamMarketService, times(3)).updateItemPrices(anyList());
     }
 
     @Test
