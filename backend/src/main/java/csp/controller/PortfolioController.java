@@ -11,8 +11,13 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/api/portfolio")
 public class PortfolioController {
+
+    private final PortfolioService portfolioService;
+
     @Autowired
-    PortfolioService portfolioService;
+    PortfolioController(PortfolioService portfolioService) {
+        this.portfolioService = portfolioService;
+    }
 
     @GetMapping
     public ResponseEntity<Portfolio> getPortfolio() {
