@@ -8,6 +8,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SteamMarketService {
@@ -35,8 +36,16 @@ public class SteamMarketService {
                 .block();
         //TODO:ERROR HANDLING HERE; IF THE REQUESTS SOMEHOW FAIL
         for (int i = 0; i < itemList.size(); i++) {
-            itemList.get(i).setCurrentPrice(Float.parseFloat(priceOverviewList.get(i).lowest_price()));
+            itemList.get(i).setCurrentPrice(Float.parseFloat(removeLastCharOptional(priceOverviewList.get(i).lowest_price()).replace(",", ".")));
         }
         return itemList;
+    }
+
+    //Used to remove the currency indicator brought by the market response
+    private static String removeLastCharOptional(String s) {
+        return Optional.ofNullable(s)
+                .filter(str -> !str.isEmpty())
+                .map(str -> str.substring(0, str.length() - 1))
+                .orElse(s);
     }
 }

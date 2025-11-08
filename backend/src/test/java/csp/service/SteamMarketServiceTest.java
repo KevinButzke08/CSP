@@ -31,9 +31,9 @@ class SteamMarketServiceTest {
         item2.setName("AWP | Asiimov");
         item2.setCurrentPrice(0);
 
-        SteamPriceOverview price1 = new SteamPriceOverview(true, "3.75", "0", "0");
+        SteamPriceOverview price1 = new SteamPriceOverview(true, "3.75€", "0", "0");
 
-        SteamPriceOverview price2 = new SteamPriceOverview(true, "12.50", "0", "0");
+        SteamPriceOverview price2 = new SteamPriceOverview(true, "12.50€", "0", "0");
 
         SteamMarketService mockService = Mockito.spy(steamMarketService);
         doReturn(Mono.just(price1))

@@ -60,7 +60,7 @@ class PortfolioServiceTest {
     }
 
     @Test
-    void addItemToPortfolio() {
+    void testAddItemToPortfolio() {
         when(steamMarketService.updateItemPrices(anyList())).thenAnswer(inv -> inv.getArgument(0));
 
         Item item = new Item();
@@ -74,5 +74,24 @@ class PortfolioServiceTest {
         assertEquals(20f, portfolio.getItemList().getFirst().getCurrentPrice());
         assertEquals(20f, portfolio.getTotalPurchasePrice());
         assertEquals(40f, portfolio.getCurrentValue());
+    }
+
+    @Test
+    void testDeleteItemFromPortfolio() {
+        when(steamMarketService.updateItemPrices(anyList())).thenAnswer(inv -> inv.getArgument(0));
+
+        Item item = new Item();
+        item.setName("AK-47 | Cartel");
+        item.setCurrentPrice(20f);
+        item.setPurchasePrice(10f);
+        item.setQuantity(2);
+        portfolioService.addItemToPortfolio(item);
+
+        portfolioService.deleteItemFromPortfolio("AK-47 | Cartel");
+        Portfolio portfolio = portfolioService.getPortfolio();
+        assertEquals(0, portfolio.getItemList().size());
+        assertEquals(0, portfolio.getTotalPurchasePrice());
+        assertEquals(0, portfolio.getCurrentValue());
+        assertEquals(0, portfolio.getChangePercentage());
     }
 }

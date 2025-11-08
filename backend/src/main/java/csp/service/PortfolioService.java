@@ -35,8 +35,6 @@ public class PortfolioService {
         List<Item> mutablePortfolioList = new ArrayList<>(portfolio.getItemList());
         mutablePortfolioList.add(item);
         portfolio.setItemList(mutablePortfolioList);
-        portfolio.setTotalPurchasePrice(portfolio.getTotalPurchasePrice() + item.getPurchasePrice() * item.getQuantity());
-
         // Calculate the new changes to currentValue and totalPrice etc.
         updatePortfolio();
     }
@@ -48,12 +46,19 @@ public class PortfolioService {
         float currentValue = (float) updatedItemList.stream().mapToDouble(item -> item.getCurrentPrice() * item.getQuantity()).sum();
         portfolio.setCurrentValue(currentValue);
 
-        float changePercentage = ((portfolio.getCurrentValue() - portfolio.getTotalPurchasePrice()) / portfolio.getTotalPurchasePrice()) * 100f;
-        portfolio.setChangePercentage(changePercentage);
-
+        float totalPurchasePrice = (float) updatedItemList.stream().mapToDouble(item -> item.getPurchasePrice() * item.getQuantity()).sum();
+        portfolio.setTotalPurchasePrice(totalPurchasePrice);
+        // If total purchase price is 0, we need to prevent this because of division through 0
+        if (portfolio.getTotalPurchasePrice() > 0f) {
+            float changePercentage = ((portfolio.getCurrentValue() - portfolio.getTotalPurchasePrice()) / portfolio.getTotalPurchasePrice()) * 100f;
+            portfolio.setChangePercentage(changePercentage);
+        } else {
+            portfolio.setChangePercentage(0f);
+        }
         portfolioRepository.save(portfolio);
     }
 
+    //TODO: Taking the name, will delete every item with the same market hash name as well, needs to be set to id probably
     public void deleteItemFromPortfolio(String name) {
         List<Item> mutablePortfolioList = new ArrayList<>(portfolio.getItemList());
         boolean removed = mutablePortfolioList.removeIf(item -> item.getName().equals(name));
