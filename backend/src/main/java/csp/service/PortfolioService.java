@@ -2,11 +2,13 @@ package csp.service;
 
 
 import csp.controller.ItemDTO;
+import csp.exceptions.ItemNotFoundException;
 import csp.inventory.Item;
 import csp.inventory.Portfolio;
 import csp.repository.PortfolioRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-
+@Slf4j
 @Service
 public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
@@ -36,7 +38,7 @@ public class PortfolioService {
         if (portfolioRepository.count() == 0) {
             portfolio = portfolioRepository.save(new Portfolio());
         } else portfolio = portfolioRepository.findAll().getFirst();
-        System.out.println("Loaded portfolio with ID: " + portfolio.getId());
+        log.info("Loaded portfolio with ID: " + portfolio.getId());
     }
 
     public void addItemToPortfolio(ItemDTO itemDTO) {
@@ -69,10 +71,10 @@ public class PortfolioService {
 
     public void deleteItemFromPortfolio(Long id) {
         List<Item> mutablePortfolioList = new ArrayList<>(portfolio.getItemList());
-        
+
         boolean removed = mutablePortfolioList.removeIf(item -> item.getId().equals(id));
         if (!removed) {
-            throw new IllegalArgumentException("No Item with the id" + id + "found!");
+            throw new ItemNotFoundException(id);
         }
         portfolio.setItemList(mutablePortfolioList);
         updatePortfolio();

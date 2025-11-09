@@ -35,7 +35,6 @@ class PortfolioServiceTest {
     @Test
     void testInit_loadsExistingPortfolioAutomatically() {
         Portfolio portfolio = portfolioService.getPortfolio();
-        System.out.println(portfolio.toString());
         assertNotNull(portfolio);
         assertEquals(1, portfolio.getId());
     }
