@@ -1,12 +1,16 @@
 package csp.inventory;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Portfolio {
     @Id

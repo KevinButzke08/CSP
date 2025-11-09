@@ -1,6 +1,5 @@
 package csp.controller;
 
-import csp.inventory.Item;
 import csp.inventory.Portfolio;
 import csp.service.PortfolioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +25,8 @@ public class PortfolioController {
     }
 
     @PostMapping("/items")
-    public ResponseEntity<Portfolio> addItem(@RequestBody Item item) {
-        portfolioService.addItemToPortfolio(item);
+    public ResponseEntity<Portfolio> addItem(@RequestBody ItemDTO itemDTO) {
+        portfolioService.addItemToPortfolio(itemDTO);
         return ResponseEntity.ok(portfolioService.getPortfolio());
     }
 

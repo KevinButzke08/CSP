@@ -1,10 +1,13 @@
 package csp.service;
 
+
+import csp.controller.ItemDTO;
 import csp.inventory.Item;
 import csp.inventory.Portfolio;
 import csp.repository.PortfolioRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,12 +19,15 @@ import java.util.List;
 public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final SteamMarketService steamMarketService;
+    private final ItemMapper itemMapper;
     @Getter
     private Portfolio portfolio;
 
-    public PortfolioService(PortfolioRepository portfolioRepository, SteamMarketService steamMarketService) {
+    @Autowired
+    public PortfolioService(PortfolioRepository portfolioRepository, SteamMarketService steamMarketService, ItemMapper itemMapper) {
         this.portfolioRepository = portfolioRepository;
         this.steamMarketService = steamMarketService;
+        this.itemMapper = itemMapper;
     }
 
     @PostConstruct
@@ -33,8 +39,9 @@ public class PortfolioService {
         System.out.println("Loaded portfolio with ID: " + portfolio.getId());
     }
 
-    public void addItemToPortfolio(Item item) {
+    public void addItemToPortfolio(ItemDTO itemDTO) {
         List<Item> mutablePortfolioList = new ArrayList<>(portfolio.getItemList());
+        Item item = itemMapper.itemDTOtoItem(itemDTO);
         mutablePortfolioList.add(item);
         portfolio.setItemList(mutablePortfolioList);
         // Calculate the new changes to currentValue and totalPrice etc.
@@ -43,7 +50,7 @@ public class PortfolioService {
 
     public void updatePortfolio() {
         List<Item> updatedItemList = steamMarketService.updateItemPrices(portfolio.getItemList());
-        portfolio.setItemList(new ArrayList<>(updatedItemList));
+        portfolio.setItemList(updatedItemList);
 
         BigDecimal currentValue = updatedItemList.stream().map(item -> item.getCurrentPrice().multiply(BigDecimal.valueOf(item.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
         portfolio.setCurrentValue(currentValue);
@@ -57,12 +64,12 @@ public class PortfolioService {
         } else {
             portfolio.setChangePercentage(BigDecimal.ZERO);
         }
-        portfolioRepository.save(portfolio);
+        portfolio = portfolioRepository.save(portfolio);
     }
 
     public void deleteItemFromPortfolio(Long id) {
         List<Item> mutablePortfolioList = new ArrayList<>(portfolio.getItemList());
-        System.out.println(mutablePortfolioList.getFirst());
+        
         boolean removed = mutablePortfolioList.removeIf(item -> item.getId().equals(id));
         if (!removed) {
             throw new IllegalArgumentException("No Item with the id" + id + "found!");

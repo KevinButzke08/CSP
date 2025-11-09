@@ -8,6 +8,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +38,7 @@ public class SteamMarketService {
                 .block();
         //TODO:ERROR HANDLING HERE; IF THE REQUESTS SOMEHOW FAIL
         for (int i = 0; i < itemList.size(); i++) {
-            itemList.get(i).setCurrentPrice(BigDecimal.valueOf(Long.parseLong(removeLastCharOptional(priceOverviewList.get(i).lowest_price()).replace(",", "."))));
+            itemList.get(i).setCurrentPrice(BigDecimal.valueOf(Float.parseFloat(removeLastCharOptional(priceOverviewList.get(i).lowest_price()).replace(",", "."))).setScale(2, RoundingMode.HALF_UP));
         }
         return itemList;
     }

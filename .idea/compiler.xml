@@ -6,6 +6,14 @@
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct-processor/1.6.3/52e345c907fbf173b376586c7f8b131d53fa5867/mapstruct-processor-1.6.3.jar" />
+        </processorPath>
+        <module name="github.project.CSP.test" />
+      </profile>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct-processor/1.6.3/52e345c907fbf173b376586c7f8b131d53fa5867/mapstruct-processor-1.6.3.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.40/398c6d2d7c42c96b65e78d2ddc9be0058c163453/lombok-1.18.40.jar" />
         </processorPath>
         <module name="github.project.CSP.main" />
