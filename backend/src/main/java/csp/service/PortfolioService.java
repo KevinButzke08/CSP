@@ -7,6 +7,8 @@ import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,29 +43,29 @@ public class PortfolioService {
 
     public void updatePortfolio() {
         List<Item> updatedItemList = steamMarketService.updateItemPrices(portfolio.getItemList());
-        portfolio.setItemList(updatedItemList);
+        portfolio.setItemList(new ArrayList<>(updatedItemList));
 
-        float currentValue = (float) updatedItemList.stream().mapToDouble(item -> item.getCurrentPrice() * item.getQuantity()).sum();
+        BigDecimal currentValue = updatedItemList.stream().map(item -> item.getCurrentPrice().multiply(BigDecimal.valueOf(item.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
         portfolio.setCurrentValue(currentValue);
 
-        float totalPurchasePrice = (float) updatedItemList.stream().mapToDouble(item -> item.getPurchasePrice() * item.getQuantity()).sum();
+        BigDecimal totalPurchasePrice = updatedItemList.stream().map(item -> item.getPurchasePrice().multiply(BigDecimal.valueOf(item.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
         portfolio.setTotalPurchasePrice(totalPurchasePrice);
         // If total purchase price is 0, we need to prevent this because of division through 0
-        if (portfolio.getTotalPurchasePrice() > 0f) {
-            float changePercentage = ((portfolio.getCurrentValue() - portfolio.getTotalPurchasePrice()) / portfolio.getTotalPurchasePrice()) * 100f;
+        if (portfolio.getTotalPurchasePrice().compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal changePercentage = portfolio.getCurrentValue().subtract(portfolio.getTotalPurchasePrice()).divide(portfolio.getTotalPurchasePrice(), RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
             portfolio.setChangePercentage(changePercentage);
         } else {
-            portfolio.setChangePercentage(0f);
+            portfolio.setChangePercentage(BigDecimal.ZERO);
         }
         portfolioRepository.save(portfolio);
     }
 
-    //TODO: Taking the name, will delete every item with the same market hash name as well, needs to be set to id probably
-    public void deleteItemFromPortfolio(String name) {
+    public void deleteItemFromPortfolio(Long id) {
         List<Item> mutablePortfolioList = new ArrayList<>(portfolio.getItemList());
-        boolean removed = mutablePortfolioList.removeIf(item -> item.getName().equals(name));
+        System.out.println(mutablePortfolioList.getFirst());
+        boolean removed = mutablePortfolioList.removeIf(item -> item.getId().equals(id));
         if (!removed) {
-            throw new IllegalArgumentException("No Item with the name" + name + "found!");
+            throw new IllegalArgumentException("No Item with the id" + id + "found!");
         }
         portfolio.setItemList(mutablePortfolioList);
         updatePortfolio();

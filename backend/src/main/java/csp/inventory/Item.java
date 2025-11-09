@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
 public class Item {
@@ -14,6 +16,6 @@ public class Item {
     private Long id;
     private String name;
     private int quantity;
-    private float currentPrice;
-    private float purchasePrice;
+    private BigDecimal currentPrice;
+    private BigDecimal purchasePrice;
 }

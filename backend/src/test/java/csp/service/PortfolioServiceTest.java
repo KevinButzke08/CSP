@@ -10,7 +10,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -39,14 +42,14 @@ class PortfolioServiceTest {
 
         Item item = new Item();
         item.setName("AK-47 | Redline");
-        item.setCurrentPrice(5f);
-        item.setPurchasePrice(2.5f);
+        item.setCurrentPrice(BigDecimal.valueOf(5));
+        item.setPurchasePrice(BigDecimal.valueOf(2.5));
         item.setQuantity(1);
 
         Item item2 = new Item();
         item2.setName("AK-47 | Cartel");
-        item2.setCurrentPrice(10f);
-        item2.setPurchasePrice(5f);
+        item2.setCurrentPrice(BigDecimal.TEN);
+        item2.setPurchasePrice(BigDecimal.valueOf(5));
         item2.setQuantity(1);
 
         portfolioService.addItemToPortfolio(item);
@@ -55,7 +58,7 @@ class PortfolioServiceTest {
 
         Portfolio portfolio = portfolioService.getPortfolio();
         assertEquals(2, portfolio.getItemList().size());
-        assertEquals(100f, portfolio.getChangePercentage());
+        assertEquals(0, portfolio.getChangePercentage().compareTo(BigDecimal.valueOf(100)));
         verify(steamMarketService, times(3)).updateItemPrices(anyList());
     }
 
@@ -65,15 +68,15 @@ class PortfolioServiceTest {
 
         Item item = new Item();
         item.setName("AK-47 | Cartel");
-        item.setCurrentPrice(20f);
-        item.setPurchasePrice(10f);
+        item.setCurrentPrice(BigDecimal.valueOf(20));
+        item.setPurchasePrice(BigDecimal.valueOf(10));
         item.setQuantity(2);
         portfolioService.addItemToPortfolio(item);
 
         Portfolio portfolio = portfolioService.getPortfolio();
-        assertEquals(20f, portfolio.getItemList().getFirst().getCurrentPrice());
-        assertEquals(20f, portfolio.getTotalPurchasePrice());
-        assertEquals(40f, portfolio.getCurrentValue());
+        assertEquals(0, portfolio.getItemList().getFirst().getCurrentPrice().compareTo(BigDecimal.valueOf(20)));
+        assertEquals(0, portfolio.getTotalPurchasePrice().compareTo(BigDecimal.valueOf(20)));
+        assertEquals(0, portfolio.getCurrentValue().compareTo(BigDecimal.valueOf(40)));
     }
 
     @Test
@@ -82,16 +85,16 @@ class PortfolioServiceTest {
 
         Item item = new Item();
         item.setName("AK-47 | Cartel");
-        item.setCurrentPrice(20f);
-        item.setPurchasePrice(10f);
+        item.setCurrentPrice(BigDecimal.valueOf(20));
+        item.setPurchasePrice(BigDecimal.valueOf(10));
         item.setQuantity(2);
         portfolioService.addItemToPortfolio(item);
-
-        portfolioService.deleteItemFromPortfolio("AK-47 | Cartel");
         Portfolio portfolio = portfolioService.getPortfolio();
+
+        portfolioService.deleteItemFromPortfolio(portfolio.getItemList().getFirst().getId());
         assertEquals(0, portfolio.getItemList().size());
-        assertEquals(0, portfolio.getTotalPurchasePrice());
-        assertEquals(0, portfolio.getCurrentValue());
-        assertEquals(0, portfolio.getChangePercentage());
+        assertEquals(0, portfolio.getTotalPurchasePrice().compareTo(BigDecimal.ZERO));
+        assertEquals(0, portfolio.getCurrentValue().compareTo(BigDecimal.ZERO));
+        assertEquals(0, portfolio.getChangePercentage().compareTo(BigDecimal.ZERO));
     }
 }

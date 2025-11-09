@@ -8,10 +8,11 @@ import org.mockito.Mockito;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doReturn;
 
 class SteamMarketServiceTest {
     private SteamMarketService steamMarketService;
@@ -25,11 +26,11 @@ class SteamMarketServiceTest {
     void updateItemPrices() {
         Item item1 = new Item();
         item1.setName("AK-47 | Redline");
-        item1.setCurrentPrice(5);
+        item1.setCurrentPrice(BigDecimal.valueOf(5));
 
         Item item2 = new Item();
         item2.setName("AWP | Asiimov");
-        item2.setCurrentPrice(0);
+        item2.setCurrentPrice(BigDecimal.ZERO);
 
         SteamPriceOverview price1 = new SteamPriceOverview(true, "3.75€", "0", "0");
 
@@ -45,7 +46,7 @@ class SteamMarketServiceTest {
         List<Item> updated = mockService.updateItemPrices(List.of(item1, item2));
 
         // Assert
-        assertEquals(3.75f, updated.get(0).getCurrentPrice(), 0.001);
-        assertEquals(12.50f, updated.get(1).getCurrentPrice(), 0.001);
+        assertEquals(0, updated.get(0).getCurrentPrice().compareTo(BigDecimal.valueOf(3.75)));
+        assertEquals(0, updated.get(1).getCurrentPrice().compareTo(BigDecimal.valueOf(12.50)));
     }
 }

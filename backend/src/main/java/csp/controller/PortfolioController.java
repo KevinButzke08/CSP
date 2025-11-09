@@ -31,9 +31,9 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioService.getPortfolio());
     }
 
-    @DeleteMapping("/items/{itemName}")
-    public ResponseEntity<Portfolio> deleteItem(@PathVariable String itemName) {
-        portfolioService.deleteItemFromPortfolio(itemName);
+    @DeleteMapping("/items/{itemId}")
+    public ResponseEntity<Portfolio> deleteItem(@PathVariable Long itemId) {
+        portfolioService.deleteItemFromPortfolio(itemId);
         return ResponseEntity.ok(portfolioService.getPortfolio());
     }
 

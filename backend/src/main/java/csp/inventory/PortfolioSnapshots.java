@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,6 +16,6 @@ public class PortfolioSnapshots {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private LocalDateTime timestamp;
-    private float currentValue;
-    private float changePercentage;
+    private BigDecimal currentValue;
+    private BigDecimal changePercentage;
 }

@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class SteamMarketService {
                 .block();
         //TODO:ERROR HANDLING HERE; IF THE REQUESTS SOMEHOW FAIL
         for (int i = 0; i < itemList.size(); i++) {
-            itemList.get(i).setCurrentPrice(Float.parseFloat(removeLastCharOptional(priceOverviewList.get(i).lowest_price()).replace(",", ".")));
+            itemList.get(i).setCurrentPrice(BigDecimal.valueOf(Long.parseLong(removeLastCharOptional(priceOverviewList.get(i).lowest_price()).replace(",", "."))));
         }
         return itemList;
     }
