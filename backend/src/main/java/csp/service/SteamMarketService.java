@@ -1,6 +1,5 @@
 package csp.service;
 
-import csp.exceptions.ItemNotFoundOnMarketException;
 import csp.inventory.Item;
 import csp.responses.SteamPriceOverview;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,6 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +35,7 @@ public class SteamMarketService {
 
     public List<Item> updateItemPrices(List<Item> itemList) {
         List<SteamPriceOverview> priceOverviewList = Flux.fromIterable(itemList)
-                .flatMap(item -> getItemPriceOverview(item.getName())
+                .flatMapSequential(item -> getItemPriceOverview(item.getName())
                         .onErrorResume(e -> {
                             log.error("Failed to fetch price for " + item.getName() + ": " + e.getMessage());
                             return Mono.just(new SteamPriceOverview(false, "0", "0", "0"));
@@ -45,24 +43,14 @@ public class SteamMarketService {
                 .collectList()
                 .block();
 
-        List<Item> itemsToRemove = new ArrayList<>();
-        //TODO: FIX BUG THAT DELETES ALL ELEMENTS OF THE ITEM LIST AND WRITE TESTS
         for (int i = 0; i < itemList.size(); i++) {
             try {
-                if (priceOverviewList.get(i).lowest_price() == null) {
-                    itemsToRemove.add(itemList.get(i));
-                    throw new ItemNotFoundOnMarketException(itemList.get(i).getName());
-                }
-                itemList.get(i).setCurrentPrice(BigDecimal.valueOf(Float.parseFloat(removeLastCharOptional(priceOverviewList.get(i).lowest_price()).replace(",", "."))).setScale(2, RoundingMode.HALF_UP));
-            } catch (ItemNotFoundOnMarketException itemNotFoundOnMarketException) {
-                // DO NOT parse price! Just log + continue
-                log.warn("Item removed: {}", itemNotFoundOnMarketException.getMessage());
+                itemList.get(i).setCurrentPrice(BigDecimal.valueOf(Float.parseFloat(removeLastCharOptional(priceOverviewList.get(i).lowest_price()).replace(',', '.').replace('-', '0'))).setScale(2, RoundingMode.HALF_UP));
             } catch (Exception e) {
                 log.error("Failed to parse price for " + itemList.get(i).getName() + ": " + e.getMessage());
                 itemList.get(i).setCurrentPrice(BigDecimal.ZERO);
             }
         }
-        itemList.removeAll(itemsToRemove);
         return itemList;
     }
 

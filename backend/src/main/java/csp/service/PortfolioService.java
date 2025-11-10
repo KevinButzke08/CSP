@@ -3,7 +3,9 @@ package csp.service;
 
 import csp.controller.ItemDTO;
 import csp.exceptions.ItemNotFoundException;
+import csp.exceptions.ItemNotFoundOnMarketException;
 import csp.inventory.Item;
+import csp.inventory.ItemNames;
 import csp.inventory.Portfolio;
 import csp.repository.PortfolioRepository;
 import jakarta.annotation.PostConstruct;
@@ -16,6 +18,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+
 @Slf4j
 @Service
 public class PortfolioService {
@@ -42,6 +45,10 @@ public class PortfolioService {
     }
 
     public void addItemToPortfolio(ItemDTO itemDTO) {
+        // If market name given not in the enum, not valid, throw exception!
+        if (!ItemNames.isValidMarketName(itemDTO.name())) {
+            throw new ItemNotFoundOnMarketException(itemDTO.name());
+        }
         List<Item> mutablePortfolioList = new ArrayList<>(portfolio.getItemList());
         Item item = itemMapper.itemDTOtoItem(itemDTO);
         mutablePortfolioList.add(item);

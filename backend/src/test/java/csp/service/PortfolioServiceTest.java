@@ -1,6 +1,7 @@
 package csp.service;
 
 import csp.controller.ItemDTO;
+import csp.exceptions.ItemNotFoundOnMarketException;
 import csp.inventory.Item;
 import csp.inventory.Portfolio;
 import csp.repository.PortfolioRepository;
@@ -14,8 +15,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -47,7 +47,7 @@ class PortfolioServiceTest {
             return items;
         });
 
-        ItemDTO item = new ItemDTO("AK-47 | Cartel", 2, BigDecimal.valueOf(10));
+        ItemDTO item = new ItemDTO("Horizon Case", 2, BigDecimal.valueOf(10));
         portfolioService.addItemToPortfolio(item);
 
         Portfolio portfolio = portfolioService.getPortfolio();
@@ -58,6 +58,20 @@ class PortfolioServiceTest {
     }
 
     @Test
+    void testInvalidItemToPortfolio() {
+        ItemDTO item = new ItemDTO("Invalid Case Name", 2, BigDecimal.valueOf(5));
+        ItemNotFoundOnMarketException ex = assertThrows(ItemNotFoundOnMarketException.class, () -> portfolioService.addItemToPortfolio(item));
+        assertEquals("No Item with the name " + item.name() + " found on the Steam market!", ex.getMessage());
+    }
+
+    @Test
+    void testInvalidItemToPortfolioDueToCaseSensitivity() {
+        ItemDTO item = new ItemDTO("horizon CASE", 2, BigDecimal.valueOf(5));
+        ItemNotFoundOnMarketException ex = assertThrows(ItemNotFoundOnMarketException.class, () -> portfolioService.addItemToPortfolio(item));
+        assertEquals("No Item with the name " + item.name() + " found on the Steam market!", ex.getMessage());
+    }
+
+    @Test
     void testDeleteItemFromPortfolio() {
         when(steamMarketService.updateItemPrices(anyList())).thenAnswer(inv -> {
             List<Item> items = inv.getArgument(0);
@@ -65,9 +79,9 @@ class PortfolioServiceTest {
             return items;
         });
 
-        ItemDTO itemDTO = new ItemDTO("AK-47 | Cartel", 2, BigDecimal.valueOf(10));
+        ItemDTO itemDTO = new ItemDTO("Horizon Case", 2, BigDecimal.valueOf(10));
         portfolioService.addItemToPortfolio(itemDTO);
-        
+
         Portfolio portfolio = portfolioService.getPortfolio();
 
         portfolioService.deleteItemFromPortfolio(portfolio.getItemList().getFirst().getId());
