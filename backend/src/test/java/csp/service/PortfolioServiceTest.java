@@ -1,6 +1,7 @@
 package csp.service;
 
 import csp.controller.ItemDTO;
+import csp.exceptions.ItemNotFoundException;
 import csp.exceptions.ItemNotFoundOnMarketException;
 import csp.inventory.Item;
 import csp.inventory.Portfolio;
@@ -89,5 +90,10 @@ class PortfolioServiceTest {
         assertEquals(0, portfolio.getTotalPurchasePrice().compareTo(BigDecimal.ZERO));
         assertEquals(0, portfolio.getCurrentValue().compareTo(BigDecimal.ZERO));
         assertEquals(0, portfolio.getChangePercentage().compareTo(BigDecimal.ZERO));
+    }
+    @Test
+    void testDeleteNotFoundItemFromPortfolio() {
+        ItemNotFoundException ex = assertThrows(ItemNotFoundException.class, () -> portfolioService.deleteItemFromPortfolio(2L));
+        assertEquals("No Item with the id 2 found!", ex.getMessage());
     }
 }
