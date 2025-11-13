@@ -46,6 +46,10 @@ https://steamcommunity.com/market/priceoverview/?country=DE&currency=3&appid=730
 -  API Key simpel durch eigenen Account, aber braucht man nicht? (Wahrscheinlich nur, wenn man Profil Requests wie Transaktionen aufgeben möchte?)
 ### SkinBaron API:
 -  API Key nach Antrag erhältlich
+-  SkinBaron gar nicht mehr so im Trend bei den meisten + nach Antrag macht es umso schwieriger
+### CSFloat API:
+-  Beliebtester westlicher marketplace
+-  Aber API auch nur mit eingeloggten Account und API Key
 ## Technical Build Plan:
 - Backend: Spring Boot Java
 - - Dependencies: SQLite, Spring Web, HTTP Client, Reactive HTTP Client, Spring Data JPA
