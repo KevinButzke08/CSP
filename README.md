@@ -9,6 +9,7 @@ Project to build a CS Portfolio manager, which shows you directly what the items
 
 ## API research:
 ### Steam market API:
+#### GET /market/itemorderhistogram:
 Horizon case API example: https://steamcommunity.com/market/itemordershistogram?country=DE&language=german&currency=1&item_nameid=175999886
 `{
   "success": 1,
@@ -35,15 +36,24 @@ Horizon case API example: https://steamcommunity.com/market/itemordershistogram?
 
 - Nice, because currency can be easily changed
 - Rate limits are still to be tested
+#### GET /market/priceoverview:
+https://steamcommunity.com/market/priceoverview/?country=DE&currency=3&appid=730&market_hash_name=Horizon%20Case
+{"success":true,"lowest_price":"1,66€","volume":"5,638","median_price":"1,63€"}
+- Best API, delivers without clutter information
+- But rate limited: 20 / per minute, 1000 / per day (But do we have so many requests?)
 ### Skinport API:
 -  https://docs.skinport.com/items
 -  API Key simpel durch eigenen Account, aber braucht man nicht? (Wahrscheinlich nur, wenn man Profil Requests wie Transaktionen aufgeben möchte?)
 ### SkinBaron API:
 -  API Key nach Antrag erhältlich
+-  SkinBaron gar nicht mehr so im Trend bei den meisten + nach Antrag macht es umso schwieriger
+### CSFloat API:
+-  Beliebtester westlicher marketplace
+-  Aber API auch nur mit eingeloggten Account und API Key
 ## Technical Build Plan:
 - Backend: Spring Boot Java
 - - Dependencies: SQLite, Spring Web, HTTP Client, Reactive HTTP Client, Spring Data JPA
-- Save user inputs of items: Postgres oder Embedded DB (H2)
+- Save user inputs of items: SQLite
 - Frontend: Vue :3
 - UI Component Framework: PrimeVue
 - Cross-Platform-Desktop-App Framework: Electron
