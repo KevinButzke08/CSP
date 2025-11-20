@@ -1,7 +1,10 @@
 package csp.repository;
 
-import csp.inventory.PortfolioSnapshots;
+import csp.inventory.PortfolioSnapshot;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SnapshotRepository extends JpaRepository<PortfolioSnapshots, Long> {
+import java.util.List;
+
+public interface SnapshotRepository extends JpaRepository<PortfolioSnapshot, Long> {
+    List<PortfolioSnapshot> findAllByOrderByTimestampDesc();
 }

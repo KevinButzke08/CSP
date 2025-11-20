@@ -11,11 +11,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-public class PortfolioSnapshots {
+public class PortfolioSnapshot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private LocalDateTime timestamp;
     private BigDecimal currentValue;
+    private BigDecimal totalPurchasePrice;
     private BigDecimal changePercentage;
 }
