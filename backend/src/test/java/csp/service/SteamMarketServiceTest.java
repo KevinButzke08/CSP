@@ -34,7 +34,7 @@ class SteamMarketServiceTest {
 
         SteamPriceOverview price1 = new SteamPriceOverview(true, "3.75€", "0", "0");
 
-        SteamPriceOverview price2 = new SteamPriceOverview(true, "12.50€", "0", "0");
+        SteamPriceOverview price2 = new SteamPriceOverview(true, "2,-€", "0", "0");
 
         SteamMarketService mockService = Mockito.spy(steamMarketService);
         doReturn(Mono.just(price1))
@@ -47,6 +47,6 @@ class SteamMarketServiceTest {
 
         // Assert
         assertEquals(0, updated.get(0).getCurrentPrice().compareTo(BigDecimal.valueOf(3.75)));
-        assertEquals(0, updated.get(1).getCurrentPrice().compareTo(BigDecimal.valueOf(12.50)));
+        assertEquals(0, updated.get(1).getCurrentPrice().compareTo(BigDecimal.valueOf(2)));
     }
 }
