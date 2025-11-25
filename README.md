@@ -63,4 +63,18 @@ https://steamcommunity.com/market/priceoverview/?country=DE&currency=3&appid=730
 ## Class-diagramm:
 <img width="790" height="330" alt="CSP Class diagram" src="documents/CSP Class diagram.png"/>
 
+## Item name enum:
+- Roughly about 1343 weapon skins, which mostly all have 5 variants for each condition (FN, MW, FT, WW, BS) but also Stattrak for each one.
+- - Some weapons dont have FN or MW conditions (AWP ASZIMOV)
+- Leads to 1343 * 5 * 2 = 13.430 item names we would have to save in the enum PLUS the items without conditions, stickers, cases etc.
+- We can reduce the size of the enum by omitting the condition and stattrak when saving it into the enum and when adding an item we check its name and then compare if the condition also exists
+- - For example: Instead of     SSG_08_DRAGONFIRE_MW("SSG 08 | Dragonfire (Minimal Wear)"), SSG_08_DRAGONFIRE_MW_ST("StatTrak™ SSG 08 | Dragonfire (Minimal Wear)"), ... etc.
+- - Just save: SSG_08_DRAGONFIRE("SSG 08 | Dragonfire") and check StatTrak with string operations, and the condition with Condition enum
+- - But how do we differentiate between the items that don't have certain wear conditions?
+- 11.740 stickers
+- Other items, like sticker holder etc.
+- 443 cases
+- In total ~28.201 items on the steam community market
+
+
 
