@@ -1,7 +1,9 @@
-package csp.itemScript;
+package csp.itemscript;
+
+import lombok.Getter;
 
 import java.util.List;
-
+@Getter
 public class SteamMarketListings {
     private Boolean success;
     private int start;
