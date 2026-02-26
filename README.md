@@ -65,16 +65,24 @@ https://steamcommunity.com/market/priceoverview/?country=DE&currency=3&appid=730
 
 ## Item name enum:
 - Roughly about 1343 weapon skins, which mostly all have 5 variants for each condition (FN, MW, FT, WW, BS) but also Stattrak for each one.
-- - Some weapons dont have FN or MW conditions (AWP ASZIMOV)
+- - Some weapons don't have FN or MW conditions (AWP ASZIMOV)
 - Leads to 1343 * 5 * 2 = 13.430 item names we would have to save in the enum PLUS the items without conditions, stickers, cases etc.
 - We can reduce the size of the enum by omitting the condition and stattrak when saving it into the enum and when adding an item we check its name and then compare if the condition also exists
-- - For example: Instead of     SSG_08_DRAGONFIRE_MW("SSG 08 | Dragonfire (Minimal Wear)"), SSG_08_DRAGONFIRE_MW_ST("StatTrak™ SSG 08 | Dragonfire (Minimal Wear)"), ... etc.
+- - For example: Instead of SSG_08_DRAGONFIRE_MW("SSG 08 | Dragonfire (Minimal Wear)"), SSG_08_DRAGONFIRE_MW_ST("StatTrak™ SSG 08 | Dragonfire (Minimal Wear)"), ... etc.
 - - Just save: SSG_08_DRAGONFIRE("SSG 08 | Dragonfire") and check StatTrak with string operations, and the condition with Condition enum
 - - But how do we differentiate between the items that don't have certain wear conditions?
 - 11.740 stickers
 - Other items, like sticker holder etc.
 - 443 cases
-- In total ~28.201 items on the steam community market
-
+- In total ~28.201 items on the steam community market (Maybe 30506, total_count of market response)
+## Runtime of script service:
+- So we have 30506 items we need to cover
+- Sadly, 10 page limit is hard set for some reason
+- We have to loop for 3051 iterations (30506/10=3050,6)
+- 3051 API calls, need to find a good timeout to not get rate limited 
+- 20 seconds timeout was safe, but slow (Would take ~17 hours)
+- 10 seconds (~8,5 hours), but get rate limited :(
+- 15 seconds? (~13 hours)
+- Because this will take so long, it may be the case that we miss some items, as they are shifted onto the previous page right as we request the new page
 
 

@@ -25,9 +25,9 @@ public class ScriptService implements CommandLineRunner {
 
     public void getItemNames() throws InterruptedException {
         Set<String> distinctItemNames = new HashSet<>();
-        for (int i = 0; i < 2700; i += 10) {
+        for (int i = 0; i < 30051; i += 10) {
             int finalI = i;
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(10);
             SteamMarketListings result = webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .queryParam("start", finalI)
