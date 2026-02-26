@@ -84,5 +84,6 @@ https://steamcommunity.com/market/priceoverview/?country=DE&currency=3&appid=730
 - 10 seconds (~8,5 hours), but get rate limited :(
 - 15 seconds? (~13 hours)
 - Because this will take so long, it may be the case that we miss some items, as they are shifted onto the previous page right as we request the new page
+- SOLUTION: Take the API of ByMykel https://github.com/ByMykel/CSGO-API and extract all items from there (Straight 60 MB JSON)
 
 

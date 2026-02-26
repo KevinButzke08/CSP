@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 @Profile("script")
 public class ScriptService implements CommandLineRunner {
     private final WebClient webClient;
-
+    //TODO: Rebuild the ScriptService to take the JSON from ByMykel and extract all names from there
     public ScriptService(WebClient.Builder builder) {
         this.webClient = builder.baseUrl("https://steamcommunity.com/market/search/render").build();
     }
