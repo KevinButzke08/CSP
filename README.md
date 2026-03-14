@@ -71,9 +71,6 @@ https://steamcommunity.com/market/priceoverview/?country=DE&currency=3&appid=730
 - - For example: Instead of SSG_08_DRAGONFIRE_MW("SSG 08 | Dragonfire (Minimal Wear)"), SSG_08_DRAGONFIRE_MW_ST("StatTrak™ SSG 08 | Dragonfire (Minimal Wear)"), ... etc.
 - - Just save: SSG_08_DRAGONFIRE("SSG 08 | Dragonfire") and check StatTrak with string operations, and the condition with Condition enum
 - - But how do we differentiate between the items that don't have certain wear conditions?
-- 11.740 stickers
-- Other items, like sticker holder etc.
-- 443 cases
 - In total ~28.201 items on the steam community market (Maybe 30506, total_count of market response)
 - SOLUTION: ScriptService runs when with a spring profile and collects all item names from the API of ByMykel.
 - It just takes all 36.025 items and doesn't reduce anything, as it is too cumbersome and results only in 1,4 MB txt file which is loaded via the NameRepository at startup
@@ -84,8 +81,7 @@ https://steamcommunity.com/market/priceoverview/?country=DE&currency=3&appid=730
 - 3051 API calls, need to find a good timeout to not get rate limited 
 - 20 seconds timeout was safe, but slow (Would take ~17 hours)
 - 10 seconds (~8,5 hours), but get rate limited :(
-- 15 seconds? (~13 hours)
 - Because this will take so long, it may be the case that we miss some items, as they are shifted onto the previous page right as we request the new page
-- SOLUTION: Take the API of ByMykel https://github.com/ByMykel/CSGO-API and extract all items from there (Straight 60 MB JSON)
+- SOLUTION: Take the API of ByMykel https://github.com/ByMykel/CSGO-API and extract all items from there (Straight 60 MB JSON), results in a 1,4 MB names file
 
 
