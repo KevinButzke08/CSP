@@ -57,7 +57,7 @@ https://steamcommunity.com/market/priceoverview/?country=DE&currency=3&appid=730
 - Frontend: Vue :3
 - UI Component Framework: PrimeVue
 - Cross-Platform-Desktop-App Framework: Electron
-- Produce a fat jar and use jpackage to bundle it to a installer
+- Produce a fat jar and use jpackage to bundle it to an installer
 - - Static files von Vue generieren (npm run build) in Spring Static resources kopieren und JDK bauen
  
 ## Class-diagramm:
@@ -75,6 +75,8 @@ https://steamcommunity.com/market/priceoverview/?country=DE&currency=3&appid=730
 - Other items, like sticker holder etc.
 - 443 cases
 - In total ~28.201 items on the steam community market (Maybe 30506, total_count of market response)
+- SOLUTION: ScriptService runs when with a spring profile and collects all item names from the API of ByMykel.
+- It just takes all 36.025 items and doesn't reduce anything, as it is too cumbersome and results only in 1,4 MB txt file which is loaded via the NameRepository at startup
 ## Runtime of script service:
 - So we have 30506 items we need to cover
 - Sadly, 10 page limit is hard set for some reason

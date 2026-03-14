@@ -28,7 +28,7 @@ public class ScriptService implements CommandLineRunner {
         this.restClient = builder.baseUrl("https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/api/en/all.json").build();
     }
 
-    public void getItemNames() throws Exception {
+    public void getItemNames() {
         Set<String> distinctItemNames = new HashSet<>();
         String json = restClient.get().retrieve().body(String.class);
         JsonParser parser = jsonFactory.createParser(ObjectReadContext.empty(), json);
@@ -39,13 +39,13 @@ public class ScriptService implements CommandLineRunner {
                 parser.nextToken();
                 // If market_hash_name = null, item cant go on the market so skip it
                 if (parser.getValueAsString() != null) {
-                    String enumEntry = getEnumEntry(parser);
+                    String enumEntry = parser.getValueAsString().trim();
                     distinctItemNames.add(enumEntry);
                     log.info(enumEntry);
                 }
             }
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("backend/src/main/java/csp/itemScript/ItemNames.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("backend/src/main/resources/ItemNames.txt"))) {
             for (String item : distinctItemNames) {
                 writer.write(item);
                 writer.newLine();
@@ -54,19 +54,6 @@ public class ScriptService implements CommandLineRunner {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    //TODO: Fix the space left after removing the (holo) of a sticker
-    private static String getEnumEntry(JsonParser parser) {
-        // Remove StatTrak and all Condition parentheses like (Factory New)
-        String valueEnum = parser.getValueAsString().replace("StatTrak™ ", "").replaceAll("\\s*\\([^)]*\\)", "").trim();
-        String keyEnum = valueEnum.toUpperCase()
-                .replaceAll("[^A-Z0-9_]", "_")   // replace any non-alphanumeric/underscore with _
-                .replaceAll("_+", "_")           // collapse multiple underscores
-                .replaceAll("^_|_$", "");        // remove leading/trailing underscores
-        if (Character.isDigit(keyEnum.charAt(0))) {              // E.g "2020 RMR" enum can't start with number
-            keyEnum = "_" + keyEnum;
-        }
-        return keyEnum.concat("(\"").concat(valueEnum).concat("\"),");
     }
 
     @Override

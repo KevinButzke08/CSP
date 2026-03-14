@@ -5,8 +5,8 @@ import csp.controller.ItemDTO;
 import csp.exceptions.ItemNotFoundException;
 import csp.exceptions.ItemNotFoundOnMarketException;
 import csp.inventory.Item;
-import csp.inventory.ItemNames;
 import csp.inventory.Portfolio;
+import csp.repository.NameRepository;
 import csp.repository.PortfolioRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -23,14 +23,16 @@ import java.util.List;
 @Service
 public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
+    private final NameRepository nameRepository;
     private final SteamMarketService steamMarketService;
     private final ItemMapper itemMapper;
     @Getter
     private Portfolio portfolio;
 
     @Autowired
-    public PortfolioService(PortfolioRepository portfolioRepository, SteamMarketService steamMarketService, ItemMapper itemMapper) {
+    public PortfolioService(PortfolioRepository portfolioRepository, NameRepository nameRepository, SteamMarketService steamMarketService, ItemMapper itemMapper) {
         this.portfolioRepository = portfolioRepository;
+        this.nameRepository = nameRepository;
         this.steamMarketService = steamMarketService;
         this.itemMapper = itemMapper;
     }
@@ -45,8 +47,8 @@ public class PortfolioService {
     }
 
     public void addItemToPortfolio(ItemDTO itemDTO) {
-        // If market name given not in the enum, not valid, throw exception!
-        if (!ItemNames.isValidMarketName(itemDTO.name())) {
+        // If market name given not in the name hashset, not valid, throw exception!
+        if (!nameRepository.contains(itemDTO.name())) {
             throw new ItemNotFoundOnMarketException(itemDTO.name());
         }
         List<Item> mutablePortfolioList = new ArrayList<>(portfolio.getItemList());
