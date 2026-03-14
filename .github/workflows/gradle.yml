@@ -24,5 +24,6 @@ jobs:
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v5.0.2
-    - name: Build with Gradle Wrapper
+    - name: Build backend with Gradle Wrapper
+      working-directory: backend
       run: ./gradlew build
