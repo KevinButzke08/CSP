@@ -5,6 +5,7 @@ import csp.exceptions.ItemNotFoundException;
 import csp.exceptions.ItemNotFoundOnMarketException;
 import csp.inventory.Item;
 import csp.inventory.Portfolio;
+import csp.repository.NameRepository;
 import csp.repository.PortfolioRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ class PortfolioServiceTest {
     private PortfolioRepository portfolioRepository;
     @Autowired
     private ItemMapper itemMapper;
+    @Autowired
+    private NameRepository nameRepository;
     @MockitoBean
     private SteamMarketService steamMarketService;
 
