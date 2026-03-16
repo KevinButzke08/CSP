@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -24,6 +25,21 @@ public class SnapshotController {
     @GetMapping
     public ResponseEntity<List<PortfolioSnapshot>> getAllSnapshots() {
         return ResponseEntity.ok(snapshotService.getAllSnapshots());
+    }
+
+    @GetMapping("/history/value")
+    public ResponseEntity<List<BigDecimal>> getValueHistory() {
+        return ResponseEntity.ok(snapshotService.getValueHistory());
+    }
+
+    @GetMapping("/history/change-percentage")
+    public ResponseEntity<List<BigDecimal>> getChangePercentageHistory() {
+        return ResponseEntity.ok(snapshotService.getChangePercentageHistory());
+    }
+
+    @GetMapping("/history/purchase-price")
+    public ResponseEntity<List<BigDecimal>> getPurchasePriceHistory() {
+        return ResponseEntity.ok(snapshotService.getPurchasePriceHistory());
     }
 
     @PostMapping("/snap")
