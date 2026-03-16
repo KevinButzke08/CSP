@@ -39,8 +39,4 @@ const items = ref([
       <Image :src="krocki" alt="Krocki" width="45"/>
     </template>
   </Menubar>
-
 </template>
-
-<style scoped>
-</style>

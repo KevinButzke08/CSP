@@ -1,83 +1,37 @@
 <script setup lang="ts">
 import Card from 'primevue/card';
-import Chart from 'primevue/chart';
 import Image from 'primevue/image';
-import {ref, onMounted} from "vue";
+import {onMounted} from "vue";
 import krocki from '@/assets/images/Krocki.jpg'
+import {usePortfolioStore} from "@/stores/portfolio.ts";
 
 onMounted(() => {
-  chartData.value = setChartData();
-  chartOptions.value = setChartOptions();
+  portfolioStore.getPortfolio();
 });
 
-const chartData = ref();
-const chartOptions = ref();
-
-const setChartData = () => {
-  const documentStyle = getComputedStyle(document.documentElement);
-
-  return {
-    labels: ['June', 'July', 'August', 'September', 'October', 'November'],
-    datasets: [
-      {
-        label: 'Inventory Value',
-        data: [65, 59, 80, 81, 56, 100],
-        fill: false,
-        borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-        tension: 0.4
-      }
-    ]
-  };
-};
-const setChartOptions = () => {
-  const documentStyle = getComputedStyle(document.documentElement);
-  const textColor = documentStyle.getPropertyValue('--p-text-color');
-  const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-  const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
-
-  return {
-    maintainAspectRatio: false,
-    aspectRatio: 0.6,
-    plugins: {
-      legend: {
-        labels: {
-          color: textColor
-        }
-      }
-    },
-    scales: {
-      x: {
-        ticks: {
-          color: textColorSecondary
-        },
-        grid: {
-          color: surfaceBorder
-        }
-      },
-      y: {
-        ticks: {
-          color: textColorSecondary
-        },
-        grid: {
-          color: surfaceBorder
-        }
-      }
-    }
-  };
-}
+const portfolioStore = usePortfolioStore();
 </script>
 
 <template>
-  <main class="flexContainer">
+  <main class="flexContainer" v-if="portfolioStore.portfolio">
     <Card class="portfolio">
-      <template #title>Total Portfolio Value: 100 Euros</template>
+      <template #title>Current Portfolio Value: {{ portfolioStore.portfolio.currentValue }} €
+      </template>
       <template #content>
-        <Chart type="line" :data="chartData" :options="chartOptions" class="portfolio-chart"/>
+        <ul>
+          <li>Amount Of Items: {{ portfolioStore.portfolio.itemList.length }}</li>
+        </ul>
+        <ul>
+          <li>Total Purchase Price: {{ portfolioStore.portfolio.totalPurchasePrice }} €</li>
+        </ul>
+        <ul>
+          <li>Change Percentage: {{ portfolioStore.portfolio.changePercentage }} %</li>
+        </ul>
       </template>
     </Card>
 
     <Card style="width: 25rem; overflow: hidden" class="item">
-      <template #title>Most Profitable Item</template>
+      <template #title>Most Profitable Item (Placeholder)</template>
       <template #content>
         <section class="item-container">
           <Image :src="krocki" alt="Krocki" width="200"/>
@@ -85,6 +39,9 @@ const setChartOptions = () => {
         </section>
       </template>
     </Card>
+  </main>
+  <main v-else>
+    <p>No Portfolio found.</p>
   </main>
 </template>
 
@@ -115,10 +72,6 @@ const setChartOptions = () => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 20px
-}
-
-.portfolio-chart {
   margin-top: 20px
 }
 </style>
