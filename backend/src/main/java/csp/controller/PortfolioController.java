@@ -24,6 +24,12 @@ public class PortfolioController {
         return ResponseEntity.ok(responsePortfolio);
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<Portfolio> refreshPortfolio() {
+        Portfolio responsePortfolio = portfolioService.refreshPortfolio();
+        return ResponseEntity.ok(responsePortfolio);
+    }
+
     @PostMapping("/items")
     public ResponseEntity<Portfolio> addItem(@RequestBody ItemDTO itemDTO) {
         portfolioService.addItemToPortfolio(itemDTO);
@@ -35,5 +41,4 @@ public class PortfolioController {
         portfolioService.deleteItemFromPortfolio(itemId);
         return ResponseEntity.ok(portfolioService.getPortfolio());
     }
-
 }

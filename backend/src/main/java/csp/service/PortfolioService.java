@@ -76,6 +76,11 @@ public class PortfolioService {
         portfolio = portfolioRepository.save(portfolio);
     }
 
+    public Portfolio refreshPortfolio() {
+        updatePortfolio();
+        return portfolio;
+    }
+
     public void deleteItemFromPortfolio(Long id) {
         List<Item> mutablePortfolioList = new ArrayList<>(portfolio.getItemList());
 
