@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '4.0.0'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'io.freefair.lombok' version('9.2.0')
 }
 
 group = 'github.project'
@@ -32,12 +33,10 @@ dependencies {
     implementation 'org.xerial:sqlite-jdbc:3.49.1.0'
     implementation 'org.hibernate.orm:hibernate-community-dialects:7.1.4.Final'
     implementation 'org.mapstruct:mapstruct:1.6.3'
+
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
-    testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

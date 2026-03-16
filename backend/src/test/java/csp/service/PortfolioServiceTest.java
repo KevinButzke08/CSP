@@ -5,6 +5,7 @@ import csp.exceptions.ItemNotFoundException;
 import csp.exceptions.ItemNotFoundOnMarketException;
 import csp.inventory.Item;
 import csp.inventory.Portfolio;
+import csp.repository.NameRepository;
 import csp.repository.PortfolioRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,6 +32,8 @@ class PortfolioServiceTest {
     private PortfolioRepository portfolioRepository;
     @Autowired
     private ItemMapper itemMapper;
+    @Autowired
+    private NameRepository nameRepository;
     @MockitoBean
     private SteamMarketService steamMarketService;
 
@@ -70,6 +74,29 @@ class PortfolioServiceTest {
         ItemDTO item = new ItemDTO("horizon CASE", 2, BigDecimal.valueOf(5));
         ItemNotFoundOnMarketException ex = assertThrows(ItemNotFoundOnMarketException.class, () -> portfolioService.addItemToPortfolio(item));
         assertEquals("No Item with the name " + item.name() + " found on the Steam market!", ex.getMessage());
+    }
+
+    @Test
+    @Transactional
+    void testRefreshPortfolioWithChangedPrice() {
+        when(steamMarketService.updateItemPrices(anyList())).thenAnswer(inv -> {
+            List<Item> items = inv.getArgument(0);
+            items.forEach(i -> i.setCurrentPrice(BigDecimal.valueOf(20)));
+            return items;
+        });
+        ItemDTO item = new ItemDTO("Horizon Case", 2, BigDecimal.valueOf(10));
+        portfolioService.addItemToPortfolio(item);
+
+        when(steamMarketService.updateItemPrices(anyList())).thenAnswer(inv -> {
+            List<Item> items = inv.getArgument(0);
+            items.forEach(i -> i.setCurrentPrice(BigDecimal.valueOf(30)));
+            return items;
+        });
+
+        Portfolio portfolio = portfolioService.refreshPortfolio();
+        assertEquals(0, portfolio.getItemList().getFirst().getCurrentPrice().compareTo(BigDecimal.valueOf(30)));
+        assertEquals(0, portfolio.getTotalPurchasePrice().compareTo(BigDecimal.valueOf(20)));
+        assertEquals(0, portfolio.getCurrentValue().compareTo(BigDecimal.valueOf(60)));
     }
 
     @Test

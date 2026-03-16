@@ -1,5 +1,5 @@
 # CSP
-COUNTER-STRIKE PORTFOLIO 
+COUNTER-STRIKE PORTFOLIO [![Java CI with Gradle](https://github.com/KevinButzke08/CSP/actions/workflows/gradle.yml/badge.svg)](https://github.com/KevinButzke08/CSP/actions/workflows/gradle.yml)
 
 Project to build a CS Portfolio manager, which shows you directly what the items in your Steam inventory are worth (On 3-party sites and steam market).
 -  Graphs to visualize and track your investment progress
@@ -57,10 +57,31 @@ https://steamcommunity.com/market/priceoverview/?country=DE&currency=3&appid=730
 - Frontend: Vue :3
 - UI Component Framework: PrimeVue
 - Cross-Platform-Desktop-App Framework: Electron
-- Produce a fat jar and use jpackage to bundle it to a installer
+- Produce a fat jar and use jpackage to bundle it to an installer
 - - Static files von Vue generieren (npm run build) in Spring Static resources kopieren und JDK bauen
  
 ## Class-diagramm:
 <img width="790" height="330" alt="CSP Class diagram" src="documents/CSP Class diagram.png"/>
+
+## Item name enum:
+- Roughly about 1343 weapon skins, which mostly all have 5 variants for each condition (FN, MW, FT, WW, BS) but also Stattrak for each one.
+- - Some weapons don't have FN or MW conditions (AWP ASZIMOV)
+- Leads to 1343 * 5 * 2 = 13.430 item names we would have to save in the enum PLUS the items without conditions, stickers, cases etc.
+- We can reduce the size of the enum by omitting the condition and stattrak when saving it into the enum and when adding an item we check its name and then compare if the condition also exists
+- - For example: Instead of SSG_08_DRAGONFIRE_MW("SSG 08 | Dragonfire (Minimal Wear)"), SSG_08_DRAGONFIRE_MW_ST("StatTrak™ SSG 08 | Dragonfire (Minimal Wear)"), ... etc.
+- - Just save: SSG_08_DRAGONFIRE("SSG 08 | Dragonfire") and check StatTrak with string operations, and the condition with Condition enum
+- - But how do we differentiate between the items that don't have certain wear conditions?
+- In total ~28.201 items on the steam community market (Maybe 30506, total_count of market response)
+- SOLUTION: ScriptService runs when with a spring profile and collects all item names from the API of ByMykel.
+- It just takes all 36.025 items and doesn't reduce anything, as it is too cumbersome and results only in 1,4 MB txt file which is loaded via the NameRepository at startup
+## Runtime of script service:
+- So we have 30506 items we need to cover
+- Sadly, 10 page limit is hard set for some reason
+- We have to loop for 3051 iterations (30506/10=3050,6)
+- 3051 API calls, need to find a good timeout to not get rate limited 
+- 20 seconds timeout was safe, but slow (Would take ~17 hours)
+- 10 seconds (~8,5 hours), but get rate limited :(
+- Because this will take so long, it may be the case that we miss some items, as they are shifted onto the previous page right as we request the new page
+- SOLUTION: Take the API of ByMykel https://github.com/ByMykel/CSGO-API and extract all items from there (Straight 60 MB JSON), results in a 1,4 MB names file
 
 
