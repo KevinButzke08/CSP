@@ -1,5 +1,5 @@
 # CSP
-COUNTER-STRIKE PORTFOLIO 
+COUNTER-STRIKE PORTFOLIO [![Java CI with Gradle](https://github.com/KevinButzke08/CSP/actions/workflows/gradle.yml/badge.svg)](https://github.com/KevinButzke08/CSP/actions/workflows/gradle.yml)
 
 Project to build a CS Portfolio manager, which shows you directly what the items in your Steam inventory are worth (On 3-party sites and steam market).
 -  Graphs to visualize and track your investment progress
