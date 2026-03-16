@@ -4,37 +4,6 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>550</x>
-      <y>340</y>
-      <w>180</w>
-      <h>130</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;enumeration&gt;&gt;
-Condition
---
-FACTORY_NEW
-MINIMAL_WEAR
-FIELD_TESTED
-WELL_WORN
-BATTLE_SCARRED</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>310</x>
-      <y>410</y>
-      <w>180</w>
-      <h>50</h>
-    </coordinates>
-    <panel_attributes>ConditionItem
---
--condition: Condition</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
       <x>650</x>
       <y>210</y>
       <w>230</w>
@@ -65,28 +34,6 @@ BATTLE_SCARRED</panel_attributes>
 -currentPrice: BigDecimal
 -purchasePrice: BigDecimal</panel_attributes>
     <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>480</x>
-      <y>420</y>
-      <w>90</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes>lt=-</panel_attributes>
-    <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>380</x>
-      <y>320</y>
-      <w>30</w>
-      <h>110</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
