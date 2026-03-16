@@ -1,4 +1,4 @@
-package github.project.CSP.inventory;
+package csp.inventory;
 
 public enum Condition {
     FACTORY_NEW,

@@ -1,4 +1,4 @@
-package github.project.CSP.inventory;
+package csp.inventory;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

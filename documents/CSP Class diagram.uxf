@@ -38,14 +38,15 @@ BATTLE_SCARRED</panel_attributes>
       <x>690</x>
       <y>140</y>
       <w>230</w>
-      <h>100</h>
+      <h>120</h>
     </coordinates>
     <panel_attributes>Portfolio
 --
+-id: Long
 -itemList: List&lt;Item&gt;
--currentValue: float
--totalPurchasePrice: float
--changePercentage: float</panel_attributes>
+-currentValue: BigDecimal
+-totalPurchasePrice: BigDecimal
+-changePercentage: BigDecimal</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -53,7 +54,7 @@ BATTLE_SCARRED</panel_attributes>
     <coordinates>
       <x>350</x>
       <y>140</y>
-      <w>180</w>
+      <w>190</w>
       <h>120</h>
     </coordinates>
     <panel_attributes>Item
@@ -61,8 +62,8 @@ BATTLE_SCARRED</panel_attributes>
 -id: Long
 -name: String
 -quantity: int
--currentPrice: float
--purchasePrice: float</panel_attributes>
+-currentPrice: BigDecimal
+-purchasePrice: BigDecimal</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -90,15 +91,15 @@ BATTLE_SCARRED</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>520</x>
+      <x>530</x>
       <y>190</y>
-      <w>190</w>
+      <w>180</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=*
 m2=1</panel_attributes>
-    <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;160.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -112,21 +113,21 @@ m2=1</panel_attributes>
 --
 -id: Long
 -timestamp: LocalDateTime
--currentValue: float
--changePercentage: float</panel_attributes>
+-currentValue: BigDecimal
+-changePercentage: BigDecimal</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>880</x>
-      <y>230</y>
+      <y>250</y>
       <w>30</w>
-      <h>120</h>
+      <h>100</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=
 m2=*</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
   </element>
 </diagram>
