@@ -7,27 +7,33 @@ import {ref} from "vue";
 const items = ref([
   {
     label: 'Home',
-    icon: 'pi pi-home'
+    icon: 'pi pi-home',
+    route: '/'
   },
   {
     label: 'Inventory',
-    icon: 'pi pi-chart-line'
+    icon: 'pi pi-chart-line',
+    route: '/'
   },
   {
     label: 'Search',
-    icon: 'pi pi-search'
+    icon: 'pi pi-search',
+    route: '/'
   },
   {
     label: 'Favorites',
-    icon: 'pi pi-star'
+    icon: 'pi pi-star',
+    route: '/'
   },
   {
     label: 'Account',
-    icon: 'pi pi-user'
+    icon: 'pi pi-user',
+    route: '/'
   },
   {
     label: 'Feedback',
-    icon: 'pi pi-comment'
+    icon: 'pi pi-comment',
+    route: '/'
   },
 ]);
 
@@ -38,5 +44,25 @@ const items = ref([
     <template #start>
       <Image :src="krocki" alt="Krocki" width="45"/>
     </template>
+    <template #item="{ item }">
+      <router-link :to="item.route" class="menu-link">
+        <p :class="item.icon"/>
+        <p>{{ item.label }}</p>
+      </router-link>
+    </template>
   </Menubar>
 </template>
+
+<style scoped>
+.menu-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.menu-link:hover {
+  color: #f18137;
+}
+</style>
