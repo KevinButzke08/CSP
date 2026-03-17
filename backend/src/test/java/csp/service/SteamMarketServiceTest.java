@@ -46,7 +46,7 @@ class SteamMarketServiceTest {
 
         // Act
         List<Item> updated = mockService.updateItemPrices(List.of(item1, item2));
-        System.out.println(item1.getChangePercentage() +  "dsds" + item2.getChangePercentage());
+
         // Assert
         assertEquals(0, updated.get(0).getCurrentPrice().compareTo(BigDecimal.valueOf(3.75)));
         assertEquals(0, updated.get(0).getChangePercentage().compareTo(BigDecimal.valueOf(150.00)));
