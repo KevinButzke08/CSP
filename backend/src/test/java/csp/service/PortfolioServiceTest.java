@@ -116,7 +116,7 @@ class PortfolioServiceTest {
         assertEquals(0, portfolio.getItemList().size());
         assertEquals(0, portfolio.getTotalPurchasePrice().compareTo(BigDecimal.ZERO));
         assertEquals(0, portfolio.getCurrentValue().compareTo(BigDecimal.ZERO));
-        assertEquals(0, portfolio.getChangePercentage().compareTo(BigDecimal.ZERO));
+        assertEquals(0, portfolio.getTotalChangePercentage().compareTo(BigDecimal.ZERO));
     }
     @Test
     void testDeleteNotFoundItemFromPortfolio() {

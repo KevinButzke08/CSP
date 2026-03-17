@@ -18,5 +18,5 @@ public class PortfolioSnapshot {
     private LocalDateTime timestamp;
     private BigDecimal currentValue;
     private BigDecimal totalPurchasePrice;
-    private BigDecimal changePercentage;
+    private BigDecimal totalChangePercentage;
 }

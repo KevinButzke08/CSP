@@ -33,7 +33,7 @@ class SnapshotServiceTest {
     void setup() {
         Portfolio mock = new Portfolio();
         mock.setCurrentValue(BigDecimal.TWO);
-        mock.setChangePercentage(BigDecimal.valueOf(50));
+        mock.setTotalChangePercentage(BigDecimal.valueOf(50));
         mock.setTotalPurchasePrice(BigDecimal.ONE);
 
         when(portfolioService.getPortfolio()).thenReturn(mock);
@@ -57,7 +57,7 @@ class SnapshotServiceTest {
         assertEquals(1, snapshotList.size());
         PortfolioSnapshot snapshot = snapshotList.getFirst();
         assertEquals(BigDecimal.TWO, snapshot.getCurrentValue());
-        assertEquals(BigDecimal.valueOf(50), snapshot.getChangePercentage());
+        assertEquals(BigDecimal.valueOf(50), snapshot.getTotalChangePercentage());
         assertEquals(BigDecimal.ONE, snapshot.getTotalPurchasePrice());
         assertTrue(snapshot.getTimestamp().isBefore(after));
     }
@@ -92,7 +92,7 @@ class SnapshotServiceTest {
 
         Portfolio mock = new Portfolio();
         mock.setCurrentValue(BigDecimal.TEN);
-        mock.setChangePercentage(BigDecimal.valueOf(50));
+        mock.setTotalChangePercentage(BigDecimal.valueOf(50));
         mock.setTotalPurchasePrice(BigDecimal.valueOf(9));
 
         when(portfolioService.getPortfolio()).thenReturn(mock);
@@ -100,7 +100,7 @@ class SnapshotServiceTest {
         snapshotService.takeNewSnapshot();
 
         mock.setCurrentValue(BigDecimal.valueOf(3));
-        mock.setChangePercentage(BigDecimal.valueOf(20));
+        mock.setTotalChangePercentage(BigDecimal.valueOf(20));
         mock.setTotalPurchasePrice(BigDecimal.ONE);
         when(portfolioService.getPortfolio()).thenReturn(mock);
 
@@ -122,7 +122,7 @@ class SnapshotServiceTest {
 
         Portfolio mock = new Portfolio();
         mock.setCurrentValue(BigDecimal.TEN);
-        mock.setChangePercentage(BigDecimal.valueOf(500));
+        mock.setTotalChangePercentage(BigDecimal.valueOf(500));
         mock.setTotalPurchasePrice(BigDecimal.valueOf(9));
 
         when(portfolioService.getPortfolio()).thenReturn(mock);
@@ -130,7 +130,7 @@ class SnapshotServiceTest {
         snapshotService.takeNewSnapshot();
 
         mock.setCurrentValue(BigDecimal.valueOf(3));
-        mock.setChangePercentage(BigDecimal.valueOf(20));
+        mock.setTotalChangePercentage(BigDecimal.valueOf(20));
         mock.setTotalPurchasePrice(BigDecimal.ONE);
         when(portfolioService.getPortfolio()).thenReturn(mock);
 
@@ -152,7 +152,7 @@ class SnapshotServiceTest {
 
         Portfolio mock = new Portfolio();
         mock.setCurrentValue(BigDecimal.TEN);
-        mock.setChangePercentage(BigDecimal.valueOf(500));
+        mock.setTotalChangePercentage(BigDecimal.valueOf(500));
         mock.setTotalPurchasePrice(BigDecimal.valueOf(9));
 
         when(portfolioService.getPortfolio()).thenReturn(mock);
@@ -160,7 +160,7 @@ class SnapshotServiceTest {
         snapshotService.takeNewSnapshot();
 
         mock.setCurrentValue(BigDecimal.valueOf(3));
-        mock.setChangePercentage(BigDecimal.valueOf(175));
+        mock.setTotalChangePercentage(BigDecimal.valueOf(175));
         mock.setTotalPurchasePrice(BigDecimal.valueOf(29));
         when(portfolioService.getPortfolio()).thenReturn(mock);
 
