@@ -43,9 +43,16 @@ public class SteamMarketService {
                 .collectList()
                 .block();
 
+        // Update Item prices and change-percentage
         for (int i = 0; i < itemList.size(); i++) {
             try {
-                itemList.get(i).setCurrentPrice(BigDecimal.valueOf(Float.parseFloat(removeLastCharOptional(priceOverviewList.get(i).lowest_price()).replace(',', '.').replace('-', '0'))).setScale(2, RoundingMode.HALF_UP));
+                Item currentItem = itemList.get(i);
+                currentItem.setCurrentPrice(BigDecimal.valueOf(Float.parseFloat(removeLastCharOptional(priceOverviewList.get(i).lowest_price()).replace(',', '.').replace('-', '0'))).setScale(2, RoundingMode.HALF_UP));
+                if (currentItem.getPurchasePrice().compareTo(BigDecimal.ZERO) > 0) {
+                    currentItem.setChangePercentage(currentItem.getCurrentPrice().subtract(currentItem.getPurchasePrice()).divide(currentItem.getPurchasePrice(), RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)));
+                } else {
+                    currentItem.setChangePercentage(BigDecimal.ZERO);
+                }
             } catch (Exception e) {
                 log.error("Failed to parse price for " + itemList.get(i).getName() + ": " + e.getMessage());
                 itemList.get(i).setCurrentPrice(BigDecimal.ZERO);

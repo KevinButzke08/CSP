@@ -35,7 +35,7 @@ public class SnapshotService {
         portfolioSnapshot.setTimestamp(LocalDateTime.now());
         portfolioSnapshot.setCurrentValue(currentPortfolio.getCurrentValue());
         portfolioSnapshot.setTotalPurchasePrice(currentPortfolio.getTotalPurchasePrice());
-        portfolioSnapshot.setChangePercentage(currentPortfolio.getChangePercentage());
+        portfolioSnapshot.setTotalChangePercentage(currentPortfolio.getTotalChangePercentage());
 
         snapshotRepository.save(portfolioSnapshot);
     }

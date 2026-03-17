@@ -22,4 +22,5 @@ public class Item {
     private int quantity;
     private BigDecimal currentPrice;
     private BigDecimal purchasePrice;
+    private BigDecimal changePercentage;
 }
