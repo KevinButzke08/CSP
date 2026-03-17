@@ -1,5 +1,6 @@
 package csp.controller;
 
+import csp.inventory.Item;
 import csp.inventory.Portfolio;
 import csp.service.PortfolioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,13 @@ public class PortfolioController {
     public ResponseEntity<Portfolio> addItem(@RequestBody ItemDTO itemDTO) {
         portfolioService.addItemToPortfolio(itemDTO);
         return ResponseEntity.ok(portfolioService.getPortfolio());
+    }
+
+    @GetMapping("items/most-profitable-item")
+    public ResponseEntity<Item> getMostProfitableItem() {
+        return portfolioService.getMostProfitableItem()
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @DeleteMapping("/items/{itemId}")

@@ -27,10 +27,12 @@ class SteamMarketServiceTest {
         Item item1 = new Item();
         item1.setName("Operation Riptide Case");
         item1.setCurrentPrice(BigDecimal.valueOf(5));
+        item1.setPurchasePrice(BigDecimal.valueOf(1.50));
 
         Item item2 = new Item();
         item2.setName("Operation Bravo Case");
         item2.setCurrentPrice(BigDecimal.ZERO);
+        item2.setPurchasePrice(BigDecimal.valueOf(4.00));
 
         SteamPriceOverview price1 = new SteamPriceOverview(true, "3.75€", "0", "0");
 
@@ -44,9 +46,11 @@ class SteamMarketServiceTest {
 
         // Act
         List<Item> updated = mockService.updateItemPrices(List.of(item1, item2));
-
+        System.out.println(item1.getChangePercentage() +  "dsds" + item2.getChangePercentage());
         // Assert
         assertEquals(0, updated.get(0).getCurrentPrice().compareTo(BigDecimal.valueOf(3.75)));
+        assertEquals(0, updated.get(0).getChangePercentage().compareTo(BigDecimal.valueOf(150.00)));
         assertEquals(0, updated.get(1).getCurrentPrice().compareTo(BigDecimal.valueOf(2)));
+        assertEquals(0, updated.get(1).getChangePercentage().compareTo(BigDecimal.valueOf(-50.00)));
     }
 }

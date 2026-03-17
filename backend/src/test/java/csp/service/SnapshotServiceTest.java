@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class SnapshotServiceTest {
     @Autowired
     private SnapshotRepository snapshotRepository;
@@ -67,13 +69,21 @@ class SnapshotServiceTest {
         // Arrange
         snapshotService.takeNewSnapshot();
         snapshotService.takeNewSnapshot();
+        // Because of the LocalDateTime.now used in the SnapshotService, during testing this can lead to the same values present there
+        // So we correct this maybe identical value by setting it our self again
+        List<PortfolioSnapshot> snapshotList = snapshotRepository.findAll();
+        LocalDateTime baseTime = LocalDateTime.of(2026, 3, 17, 10, 0, 0);
+        for (int i = 0; i < snapshotList.size(); i++) {
+            snapshotList.get(i).setTimestamp(baseTime.plusSeconds(i));
+        }
+        snapshotRepository.saveAll(snapshotList);
 
         // Act
-        List<PortfolioSnapshot> snapshotList = snapshotService.getAllSnapshots();
+        List<PortfolioSnapshot> resultList = snapshotService.getAllSnapshots();
 
         // Assert
-        assertEquals(2, snapshotList.size());
-        assertTrue(snapshotList.get(0).getTimestamp().isAfter(snapshotList.get(1).getTimestamp()));
+        assertEquals(2, resultList.size());
+        assertTrue(resultList.get(0).getTimestamp().isAfter(resultList.get(1).getTimestamp()));
     }
 
     @Test
@@ -90,21 +100,16 @@ class SnapshotServiceTest {
         // Arrange
         snapshotService.takeNewSnapshot();
 
-        Portfolio mock = new Portfolio();
-        mock.setCurrentValue(BigDecimal.TEN);
-        mock.setTotalChangePercentage(BigDecimal.valueOf(50));
-        mock.setTotalPurchasePrice(BigDecimal.valueOf(9));
-
-        when(portfolioService.getPortfolio()).thenReturn(mock);
-
-        snapshotService.takeNewSnapshot();
-
-        mock.setCurrentValue(BigDecimal.valueOf(3));
-        mock.setTotalChangePercentage(BigDecimal.valueOf(20));
-        mock.setTotalPurchasePrice(BigDecimal.ONE);
-        when(portfolioService.getPortfolio()).thenReturn(mock);
-
-        snapshotService.takeNewSnapshot();
+        mockPortfolioAndTakeSnapshot(BigDecimal.valueOf(10), BigDecimal.valueOf(50), BigDecimal.valueOf(9));
+        mockPortfolioAndTakeSnapshot(BigDecimal.valueOf(3), BigDecimal.valueOf(20), BigDecimal.valueOf(1));
+        // Because of the LocalDateTime.now used in the SnapshotService, during testing this can lead to the same values present there
+        // So we correct this maybe identical value by setting it our self again
+        List<PortfolioSnapshot> snapshotList = snapshotRepository.findAll();
+        LocalDateTime baseTime = LocalDateTime.of(2026, 3, 17, 10, 0, 0);
+        for (int i = 0; i < snapshotList.size(); i++) {
+            snapshotList.get(i).setTimestamp(baseTime.plusSeconds(i));
+        }
+        snapshotRepository.saveAll(snapshotList);
         // Act
         List<BigDecimal> result = snapshotService.getValueHistory();
 
@@ -120,21 +125,16 @@ class SnapshotServiceTest {
         // Arrange
         snapshotService.takeNewSnapshot();
 
-        Portfolio mock = new Portfolio();
-        mock.setCurrentValue(BigDecimal.TEN);
-        mock.setTotalChangePercentage(BigDecimal.valueOf(500));
-        mock.setTotalPurchasePrice(BigDecimal.valueOf(9));
-
-        when(portfolioService.getPortfolio()).thenReturn(mock);
-
-        snapshotService.takeNewSnapshot();
-
-        mock.setCurrentValue(BigDecimal.valueOf(3));
-        mock.setTotalChangePercentage(BigDecimal.valueOf(20));
-        mock.setTotalPurchasePrice(BigDecimal.ONE);
-        when(portfolioService.getPortfolio()).thenReturn(mock);
-
-        snapshotService.takeNewSnapshot();
+        mockPortfolioAndTakeSnapshot(BigDecimal.valueOf(10), BigDecimal.valueOf(500), BigDecimal.valueOf(9));
+        mockPortfolioAndTakeSnapshot(BigDecimal.valueOf(3), BigDecimal.valueOf(20), BigDecimal.valueOf(1));
+        // Because of the LocalDateTime.now used in the SnapshotService, during testing this can lead to the same values present there
+        // So we correct this maybe identical value by setting it our self again
+        List<PortfolioSnapshot> snapshotList = snapshotRepository.findAll();
+        LocalDateTime baseTime = LocalDateTime.of(2026, 3, 17, 10, 0, 0);
+        for (int i = 0; i < snapshotList.size(); i++) {
+            snapshotList.get(i).setTimestamp(baseTime.plusSeconds(i));
+        }
+        snapshotRepository.saveAll(snapshotList);
         // Act
         List<BigDecimal> result = snapshotService.getChangePercentageHistory();
 
@@ -150,21 +150,16 @@ class SnapshotServiceTest {
         // Arrange
         snapshotService.takeNewSnapshot();
 
-        Portfolio mock = new Portfolio();
-        mock.setCurrentValue(BigDecimal.TEN);
-        mock.setTotalChangePercentage(BigDecimal.valueOf(500));
-        mock.setTotalPurchasePrice(BigDecimal.valueOf(9));
-
-        when(portfolioService.getPortfolio()).thenReturn(mock);
-
-        snapshotService.takeNewSnapshot();
-
-        mock.setCurrentValue(BigDecimal.valueOf(3));
-        mock.setTotalChangePercentage(BigDecimal.valueOf(175));
-        mock.setTotalPurchasePrice(BigDecimal.valueOf(29));
-        when(portfolioService.getPortfolio()).thenReturn(mock);
-
-        snapshotService.takeNewSnapshot();
+        mockPortfolioAndTakeSnapshot(BigDecimal.valueOf(10), BigDecimal.valueOf(500), BigDecimal.valueOf(9));
+        mockPortfolioAndTakeSnapshot(BigDecimal.valueOf(3), BigDecimal.valueOf(175), BigDecimal.valueOf(29));
+        // Because of the LocalDateTime.now used in the SnapshotService, during testing this can lead to the same values present there
+        // So we correct this maybe identical value by setting it our self again
+        List<PortfolioSnapshot> snapshotList = snapshotRepository.findAll();
+        LocalDateTime baseTime = LocalDateTime.of(2026, 3, 17, 10, 0, 0);
+        for (int i = 0; i < snapshotList.size(); i++) {
+            snapshotList.get(i).setTimestamp(baseTime.plusSeconds(i));
+        }
+        snapshotRepository.saveAll(snapshotList);
         // Act
         List<BigDecimal> result = snapshotService.getPurchasePriceHistory();
 
@@ -173,6 +168,17 @@ class SnapshotServiceTest {
         assertEquals(BigDecimal.valueOf(29), result.get(0));
         assertEquals(BigDecimal.valueOf(9), result.get(1));
         assertEquals(BigDecimal.valueOf(1), result.get(2));
+    }
+
+    private void mockPortfolioAndTakeSnapshot(BigDecimal current, BigDecimal change, BigDecimal purchase) {
+        Portfolio mock = new Portfolio();
+        mock.setCurrentValue(current);
+        mock.setTotalChangePercentage(change);
+        mock.setTotalPurchasePrice(purchase);
+        when(portfolioService.getPortfolio()).thenReturn(mock);
+        snapshotService.takeNewSnapshot();
+
+
     }
 
 }

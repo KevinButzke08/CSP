@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -122,5 +123,29 @@ class PortfolioServiceTest {
     void testDeleteNotFoundItemFromPortfolio() {
         ItemNotFoundException ex = assertThrows(ItemNotFoundException.class, () -> portfolioService.deleteItemFromPortfolio(2L));
         assertEquals("No Item with the id 2 found!", ex.getMessage());
+    }
+
+    @Test
+    void testGetMostProfitableItem() {
+        when(steamMarketService.updateItemPrices(anyList())).thenAnswer(inv -> {
+            List<Item> items = inv.getArgument(0);
+            items.forEach(i -> i.setCurrentPrice(BigDecimal.valueOf(20)));
+            items.forEach(i -> i.setChangePercentage(BigDecimal.valueOf(50)));
+            return items;
+        });
+
+        ItemDTO itemDTO = new ItemDTO("Horizon Case", 2, BigDecimal.valueOf(10));
+
+        portfolioService.addItemToPortfolio(itemDTO);
+
+        Optional<Item> resultItem = portfolioService.getMostProfitableItem();
+
+        assertEquals(0,resultItem.get().getChangePercentage().compareTo(BigDecimal.valueOf(50)));
+    }
+    @Test
+    void testGetMostProfitableItemEWithEmptyPortfolio() {
+        Optional<Item> resultItem = portfolioService.getMostProfitableItem();
+
+        assertTrue(resultItem.isEmpty());
     }
 }
