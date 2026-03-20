@@ -7,10 +7,10 @@ import csp.inventory.Item;
 import csp.inventory.Portfolio;
 import csp.repository.NameRepository;
 import csp.repository.PortfolioRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +24,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
-// So that for every test, the @PostConstruct init method of the PortfolioService is run
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@Transactional
 class PortfolioServiceTest {
     @Autowired
     private PortfolioService portfolioService;
@@ -37,6 +36,11 @@ class PortfolioServiceTest {
     private NameRepository nameRepository;
     @MockitoBean
     private SteamMarketService steamMarketService;
+
+    @BeforeEach
+    void setup() {
+        portfolioService.initializePortfolio();
+    }
 
     @Test
     void testInit_loadsExistingPortfolioAutomatically() {
@@ -61,6 +65,29 @@ class PortfolioServiceTest {
         assertEquals(0, portfolio.getTotalPurchasePrice().compareTo(BigDecimal.valueOf(20)));
         assertEquals(0, portfolio.getCurrentValue().compareTo(BigDecimal.valueOf(40)));
         verify(steamMarketService, times(1)).updateItemPrices(anyList());
+    }
+
+    @Test
+    void testAddItem_mergesExistingItem() {
+        ItemDTO firstItem = new ItemDTO("Horizon Case", 100, BigDecimal.valueOf(1.0));
+        ItemDTO secondItem = new ItemDTO("Horizon Case", 100, BigDecimal.valueOf(3.0));
+        when(steamMarketService.updateItemPrices(anyList())).thenAnswer(inv -> {
+            List<Item> items = inv.getArgument(0);
+            items.forEach(i -> i.setCurrentPrice(BigDecimal.valueOf(10)));
+            return items;
+        });
+
+        portfolioService.addItemToPortfolio(firstItem);
+        portfolioService.addItemToPortfolio(secondItem);
+
+        List<Item> items = portfolioService.getPortfolio().getItemList();
+
+        assertEquals(1, items.size());
+
+        Item result = items.getFirst();
+
+        assertEquals(200, result.getQuantity());
+        assertEquals(0, result.getPurchasePrice().compareTo(BigDecimal.valueOf(2.0)));
     }
 
     @Test
@@ -119,6 +146,7 @@ class PortfolioServiceTest {
         assertEquals(0, portfolio.getCurrentValue().compareTo(BigDecimal.ZERO));
         assertEquals(0, portfolio.getTotalChangePercentage().compareTo(BigDecimal.ZERO));
     }
+
     @Test
     void testDeleteNotFoundItemFromPortfolio() {
         ItemNotFoundException ex = assertThrows(ItemNotFoundException.class, () -> portfolioService.deleteItemFromPortfolio(2L));
@@ -140,8 +168,9 @@ class PortfolioServiceTest {
 
         Optional<Item> resultItem = portfolioService.getMostProfitableItem();
 
-        assertEquals(0,resultItem.get().getChangePercentage().compareTo(BigDecimal.valueOf(50)));
+        assertEquals(0, resultItem.get().getChangePercentage().compareTo(BigDecimal.valueOf(50)));
     }
+
     @Test
     void testGetMostProfitableItemEWithEmptyPortfolio() {
         Optional<Item> resultItem = portfolioService.getMostProfitableItem();

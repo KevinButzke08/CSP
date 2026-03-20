@@ -41,6 +41,10 @@ public class PortfolioService {
 
     @PostConstruct
     private void init() {
+        initializePortfolio();
+    }
+
+    public void initializePortfolio() {
         // Load the last saved portfolio or create one if none exists
         if (portfolioRepository.count() == 0) {
             portfolio = portfolioRepository.save(new Portfolio());
@@ -55,7 +59,22 @@ public class PortfolioService {
         }
         List<Item> mutablePortfolioList = new ArrayList<>(portfolio.getItemList());
         Item item = itemMapper.itemDTOtoItem(itemDTO);
-        mutablePortfolioList.add(item);
+        // If item is not present, add it. Else merge it with the existing one
+        Optional<Item> existingItem = mutablePortfolioList.stream().filter(item1 -> item1.getName().equals(item.getName())).findFirst();
+        if (existingItem.isEmpty()) {
+            mutablePortfolioList.add(item);
+        } else {
+            Item existing = existingItem.get();
+            int oldQuantity = existing.getQuantity();
+            int addedQuantity = item.getQuantity();
+            int newQuantity = oldQuantity + addedQuantity;
+
+            BigDecimal newAvgPurchasePrice = existing.getPurchasePrice().multiply(BigDecimal.valueOf(oldQuantity))
+                    .add(item.getPurchasePrice().multiply(BigDecimal.valueOf(addedQuantity)));
+
+            existing.setPurchasePrice(newAvgPurchasePrice.divide(BigDecimal.valueOf(newQuantity), RoundingMode.HALF_UP));
+            existing.setQuantity(newQuantity);
+        }
         portfolio.setItemList(mutablePortfolioList);
         // Calculate the new changes to currentValue and totalPrice etc.
         updatePortfolio();
