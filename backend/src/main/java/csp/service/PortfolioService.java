@@ -2,6 +2,7 @@ package csp.service;
 
 
 import csp.controller.ItemDTO;
+import csp.controller.SoldItemDTO;
 import csp.exceptions.ItemNotFoundException;
 import csp.exceptions.ItemNotFoundOnMarketException;
 import csp.inventory.Item;
@@ -27,15 +28,17 @@ public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final NameRepository nameRepository;
     private final SteamMarketService steamMarketService;
+    private final SellService sellService;
     private final ItemMapper itemMapper;
     @Getter
     private Portfolio portfolio;
 
     @Autowired
-    public PortfolioService(PortfolioRepository portfolioRepository, NameRepository nameRepository, SteamMarketService steamMarketService, ItemMapper itemMapper) {
+    public PortfolioService(PortfolioRepository portfolioRepository, NameRepository nameRepository, SteamMarketService steamMarketService, SellService sellService, ItemMapper itemMapper) {
         this.portfolioRepository = portfolioRepository;
         this.nameRepository = nameRepository;
         this.steamMarketService = steamMarketService;
+        this.sellService = sellService;
         this.itemMapper = itemMapper;
     }
 
@@ -113,6 +116,29 @@ public class PortfolioService {
         }
         portfolio.setItemList(mutablePortfolioList);
         updatePortfolio();
+    }
+
+    public void sellItemFromPortfolio(SoldItemDTO soldItemDTO) {
+        Item item = portfolio.getItemList().stream()
+                .filter(i -> i.getName().equals(soldItemDTO.name()))
+                .findFirst()
+                .orElseThrow(() -> new ItemNotFoundException(soldItemDTO.name()));
+
+        int soldQuantity = soldItemDTO.quantity();
+        if (soldQuantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than 0");
+        }
+        if (item.getQuantity() < soldQuantity) {
+            throw new IllegalArgumentException("Not enough items to sell");
+        }
+        sellService.sellItem(item, soldQuantity, soldItemDTO.sellPrice());
+        item.setQuantity(item.getQuantity() - soldQuantity);
+
+        if (item.getQuantity() == 0) {
+            portfolio.getItemList().remove(item);
+        }
+        updatePortfolio();
+
     }
 
     public Optional<Item> getMostProfitableItem() {
