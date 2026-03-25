@@ -84,4 +84,5 @@ https://steamcommunity.com/market/priceoverview/?country=DE&currency=3&appid=730
 - Because this will take so long, it may be the case that we miss some items, as they are shifted onto the previous page right as we request the new page
 - SOLUTION: Take the API of ByMykel https://github.com/ByMykel/CSGO-API and extract all items from there (Straight 60 MB JSON), results in a 1,4 MB names file
 
-
+## Architecture decisions:
+- Clearly distinguish between the present (portfolio) and the past (Snapshots, SoldItems)

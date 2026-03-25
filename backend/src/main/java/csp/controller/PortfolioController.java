@@ -37,6 +37,12 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioService.getPortfolio());
     }
 
+    @PostMapping("/sell-items")
+    public ResponseEntity<Portfolio> sellItem(@RequestBody SoldItemDTO soldItemDTO) {
+        portfolioService.sellItemFromPortfolio(soldItemDTO);
+        return ResponseEntity.ok(portfolioService.getPortfolio());
+    }
+
     @GetMapping("items/most-profitable-item")
     public ResponseEntity<Item> getMostProfitableItem() {
         return portfolioService.getMostProfitableItem()

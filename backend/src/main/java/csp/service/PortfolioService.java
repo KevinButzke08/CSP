@@ -28,17 +28,17 @@ public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final NameRepository nameRepository;
     private final SteamMarketService steamMarketService;
-    private final SellService sellService;
+    private final SoldItemsService soldItemsService;
     private final ItemMapper itemMapper;
     @Getter
     private Portfolio portfolio;
 
     @Autowired
-    public PortfolioService(PortfolioRepository portfolioRepository, NameRepository nameRepository, SteamMarketService steamMarketService, SellService sellService, ItemMapper itemMapper) {
+    public PortfolioService(PortfolioRepository portfolioRepository, NameRepository nameRepository, SteamMarketService steamMarketService, SoldItemsService soldItemsService, ItemMapper itemMapper) {
         this.portfolioRepository = portfolioRepository;
         this.nameRepository = nameRepository;
         this.steamMarketService = steamMarketService;
-        this.sellService = sellService;
+        this.soldItemsService = soldItemsService;
         this.itemMapper = itemMapper;
     }
 
@@ -131,7 +131,7 @@ public class PortfolioService {
         if (item.getQuantity() < soldQuantity) {
             throw new IllegalArgumentException("Not enough items to sell");
         }
-        sellService.sellItem(item, soldQuantity, soldItemDTO.sellPrice());
+        soldItemsService.sellItem(item, soldQuantity, soldItemDTO.sellPrice());
         item.setQuantity(item.getQuantity() - soldQuantity);
 
         if (item.getQuantity() == 0) {

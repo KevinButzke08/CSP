@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Service
-public class SellService {
+public class SoldItemsService {
     private final SoldItemRepository soldItemRepository;
 
     @Autowired
-    public SellService(SoldItemRepository soldItemRepository) {
+    public SoldItemsService(SoldItemRepository soldItemRepository) {
         this.soldItemRepository = soldItemRepository;
     }
 
@@ -32,5 +32,13 @@ public class SellService {
         soldItem.setTimestamp(LocalDateTime.now());
 
         soldItemRepository.save(soldItem);
+    }
+
+    public BigDecimal getTotalSellPrice() {
+        return soldItemRepository.getTotalSellPrice().orElse(BigDecimal.ZERO);
+    }
+
+    public BigDecimal getTotalRealizedValue() {
+        return soldItemRepository.getTotalRealizedValue().orElse(BigDecimal.ZERO);
     }
 }
