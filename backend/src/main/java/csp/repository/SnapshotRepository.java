@@ -14,7 +14,7 @@ public interface SnapshotRepository extends JpaRepository<PortfolioSnapshot, Lon
     @Query("SELECT p.currentValue FROM PortfolioSnapshot p ORDER BY p.timestamp DESC")
     List<BigDecimal> findAllCurrentValuesOrderByTimestampDesc();
 
-    @Query("SELECT p.changePercentage FROM PortfolioSnapshot p ORDER BY p.timestamp DESC")
+    @Query("SELECT p.totalChangePercentage FROM PortfolioSnapshot p ORDER BY p.timestamp DESC")
     List<BigDecimal> findAllChangePercentagesOrderByTimestampDesc();
 
     @Query("SELECT p.totalPurchasePrice FROM PortfolioSnapshot p ORDER BY p.timestamp DESC")

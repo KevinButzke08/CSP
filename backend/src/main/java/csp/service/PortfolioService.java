@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -39,6 +41,10 @@ public class PortfolioService {
 
     @PostConstruct
     private void init() {
+        initializePortfolio();
+    }
+
+    public void initializePortfolio() {
         // Load the last saved portfolio or create one if none exists
         if (portfolioRepository.count() == 0) {
             portfolio = portfolioRepository.save(new Portfolio());
@@ -53,7 +59,22 @@ public class PortfolioService {
         }
         List<Item> mutablePortfolioList = new ArrayList<>(portfolio.getItemList());
         Item item = itemMapper.itemDTOtoItem(itemDTO);
-        mutablePortfolioList.add(item);
+        // If item is not present, add it. Else merge it with the existing one
+        Optional<Item> existingItem = mutablePortfolioList.stream().filter(item1 -> item1.getName().equals(item.getName())).findFirst();
+        if (existingItem.isEmpty()) {
+            mutablePortfolioList.add(item);
+        } else {
+            Item existing = existingItem.get();
+            int oldQuantity = existing.getQuantity();
+            int addedQuantity = item.getQuantity();
+            int newQuantity = oldQuantity + addedQuantity;
+
+            BigDecimal newAvgPurchasePrice = existing.getPurchasePrice().multiply(BigDecimal.valueOf(oldQuantity))
+                    .add(item.getPurchasePrice().multiply(BigDecimal.valueOf(addedQuantity)));
+
+            existing.setPurchasePrice(newAvgPurchasePrice.divide(BigDecimal.valueOf(newQuantity), RoundingMode.HALF_UP));
+            existing.setQuantity(newQuantity);
+        }
         portfolio.setItemList(mutablePortfolioList);
         // Calculate the new changes to currentValue and totalPrice etc.
         updatePortfolio();
@@ -70,10 +91,10 @@ public class PortfolioService {
         portfolio.setTotalPurchasePrice(totalPurchasePrice);
         // If total purchase price is 0, we need to prevent this because of division through 0
         if (portfolio.getTotalPurchasePrice().compareTo(BigDecimal.ZERO) > 0) {
-            BigDecimal changePercentage = portfolio.getCurrentValue().subtract(portfolio.getTotalPurchasePrice()).divide(portfolio.getTotalPurchasePrice(), RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
-            portfolio.setChangePercentage(changePercentage);
+            BigDecimal totalChangePercentage = currentValue.subtract(totalPurchasePrice).divide(totalPurchasePrice, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+            portfolio.setTotalChangePercentage(totalChangePercentage);
         } else {
-            portfolio.setChangePercentage(BigDecimal.ZERO);
+            portfolio.setTotalChangePercentage(BigDecimal.ZERO);
         }
         portfolio = portfolioRepository.save(portfolio);
     }
@@ -92,5 +113,9 @@ public class PortfolioService {
         }
         portfolio.setItemList(mutablePortfolioList);
         updatePortfolio();
+    }
+
+    public Optional<Item> getMostProfitableItem() {
+        return portfolio.getItemList().stream().max(Comparator.comparing(Item::getChangePercentage));
     }
 }

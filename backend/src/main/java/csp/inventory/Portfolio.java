@@ -21,5 +21,5 @@ public class Portfolio {
     private List<Item> itemList = new ArrayList<>();
     private BigDecimal currentValue;
     private BigDecimal totalPurchasePrice;
-    private BigDecimal changePercentage;
+    private BigDecimal totalChangePercentage;
 }
