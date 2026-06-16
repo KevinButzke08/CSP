@@ -63,6 +63,6 @@ const items = ref([
 }
 
 .menu-link:hover {
-  color: #f18137;
+  color: var(--p-primary-500);
 }
 </style>

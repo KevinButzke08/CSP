@@ -74,4 +74,8 @@ const portfolioStore = usePortfolioStore();
   align-items: center;
   margin-top: 20px
 }
+
+.btn-secondary {
+  background: var(--p-secondary-500);
+}
 </style>
