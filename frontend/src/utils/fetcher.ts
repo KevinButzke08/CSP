@@ -4,17 +4,14 @@ type Options = {
   body?: string
 }
 
-export async function fetcher(url : string, method : string, body : any) {
+export async function fetcher(url : string, method : string, body : string | null) {
   const options : Options = {
     method: method,
     headers: {
       "Content-Type": "application/json",
     },
+    body: body ? body : ''
   };
-
-  if (body) {
-    options.body = JSON.stringify(body);
-  }
 
   const response = await fetch(url, options);
 
@@ -23,6 +20,7 @@ export async function fetcher(url : string, method : string, body : any) {
     json = await response.json();
   } catch (e) {
     json = null;
+    console.error(e)
   }
 
   if (!response.ok) {
