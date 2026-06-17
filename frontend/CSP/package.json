@@ -12,11 +12,14 @@
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
-    "test:unit": "vitest",
     "build-only": "vite build",
+    "preview": "vite preview",
     "type-check": "vue-tsc --build",
-    "lint": "eslint . --fix --cache",
+    "test:unit": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint . --cache",
+    "lint:fix": "eslint . --fix --cache",
     "format": "prettier --write src/"
   },
   "dependencies": {
